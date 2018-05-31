@@ -18,7 +18,7 @@ void main() {
     var pkgRoot = _runProc('git', ['rev-parse', '--show-toplevel']);
     var currentDir = Directory.current.resolveSymbolicLinksSync();
 
-    if (!p.equals(p.join(pkgRoot, 'json_serializable'), currentDir)) {
+    if (!p.equals(p.join(pkgRoot), currentDir)) {
       throw new StateError('Expected the git root ($pkgRoot) '
           'to match the current directory ($currentDir).');
     }
