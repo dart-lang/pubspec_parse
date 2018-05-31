@@ -14,12 +14,13 @@ String _encodeJson(Object input) =>
 
 Matcher _throwsParsedYamlException(String prettyValue) => throwsA(allOf(
     const isInstanceOf<ParsedYamlException>(),
-    new FeatureMatcher<ParsedYamlException>('message', (e) {
-      printOnFailure("r'''\n${e.message}'''");
+    new FeatureMatcher<ParsedYamlException>('formatMessage', (e) {
+      var message = e.formatMessage;
+      printOnFailure("r'''\n$message'''");
       if (e.innerStack != null) {
         printOnFailure(Trace.format(e.innerStack, terse: true));
       }
-      return e.message;
+      return message;
     }, prettyValue)));
 
 Pubspec _parse(map) => parsePubspec(_encodeJson(map));
@@ -70,6 +71,19 @@ void main() {
   });
 
   group('invalid', () {
+    test('null', () {
+      expect(() => _parse(null), throwsArgumentError);
+    });
+    test('empty string', () {
+      expect(() => _parse(''), throwsArgumentError);
+    });
+    test('array', () {
+      _expectParseThrows([], r'''
+line 1, column 1: Does not represent a YAML map.
+[]
+^^''');
+    });
+
     test('missing name', () {
       _expectParseThrows({}, r'''
 line 1, column 1: "name" cannot be empty.

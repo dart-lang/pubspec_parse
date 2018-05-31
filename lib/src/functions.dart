@@ -13,54 +13,22 @@ import 'pubspec.dart';
 Pubspec parsePubspec(String yaml, {sourceUrl}) {
   var item = loadYaml(yaml, sourceUrl: sourceUrl);
 
-  if (item is YamlMap) {
-    try {
-      return new Pubspec.fromJson(item);
-    } on CheckedFromJsonException catch (error, stack) {
-      var innerError = error.innerError;
-      String message;
-
-      if (innerError is BadKeyException) {
-        var map = innerError.map;
-        if (map is YamlMap) {
-          var key = map.nodes.keys.singleWhere((key) {
-            return (key as YamlScalar).value == innerError.key;
-          }, orElse: () => null);
-
-          if (key is YamlScalar) {
-            message = key.span.message(innerError.message);
-          }
-        }
-      }
-
-      message ??= _prettyPrintCheckedFromJsonException(error);
-
-      throw parsedYamlException(message,
-          innerError: innerError ?? error,
-          innerStack: error.innerStack ?? stack);
-    }
+  if (item == null) {
+    throw new ArgumentError.notNull('yaml');
   }
 
-  throw new StateError('boo!');
-}
-
-String _prettyPrintCheckedFromJsonException(CheckedFromJsonException err) {
-  var yamlMap = err.map as YamlMap;
-
-  var yamlValue = yamlMap.nodes[err.key];
-
-  String message;
-  if (yamlValue == null) {
-    assert(err.message != null);
-    message = '${yamlMap.span.message(err.message.toString())}';
-  } else {
-    if (err.message == null) {
-      message = 'Unsupported value for `${err.key}`.';
-    } else {
-      message = err.message.toString();
+  if (item is! YamlMap) {
+    if (item is YamlNode) {
+      throw parsedYamlException('Does not represent a YAML map.', item);
     }
-    message = yamlValue.span.message(message);
+
+    throw new ArgumentError.value(
+        yaml, 'yaml', 'Does not represent a YAML map.');
   }
 
-  return message;
+  try {
+    return new Pubspec.fromJson(item as YamlMap);
+  } on CheckedFromJsonException catch (error, stack) {
+    throw parsedYamlExceptionFromError(error, stack);
+  }
 }
