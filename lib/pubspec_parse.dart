@@ -2,7 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-export 'src/dependency_data.dart';
+export 'src/dependency.dart'
+    show
+        Dependency,
+        HostedDependency,
+        GitDependency,
+        SdkDependency,
+        PathDependency;
 export 'src/errors.dart' show ParsedYamlException;
-export 'src/functions.dart';
-export 'src/pubspec.dart';
+export 'src/functions.dart' show parsePubspec;
+export 'src/pubspec.dart' show Pubspec;

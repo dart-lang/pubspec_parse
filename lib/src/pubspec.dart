@@ -5,7 +5,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import 'dependency_data.dart';
+import 'dependency.dart';
 import 'errors.dart';
 
 part 'pubspec.g.dart';
@@ -35,13 +35,13 @@ class Pubspec {
   final Version version;
 
   @JsonKey(fromJson: _getDeps, nullable: false)
-  final Map<String, DependencyData> dependencies;
+  final Map<String, Dependency> dependencies;
 
   @JsonKey(name: 'dev_dependencies', fromJson: _getDeps, nullable: false)
-  final Map<String, DependencyData> devDependencies;
+  final Map<String, Dependency> devDependencies;
 
   @JsonKey(name: 'dependency_overrides', fromJson: _getDeps, nullable: false)
-  final Map<String, DependencyData> dependencyOverrides;
+  final Map<String, Dependency> dependencyOverrides;
 
   Pubspec(
     this.name, {
@@ -52,9 +52,9 @@ class Pubspec {
     String homepage,
     String documentation,
     String description,
-    Map<String, DependencyData> dependencies,
-    Map<String, DependencyData> devDependencies,
-    Map<String, DependencyData> dependencyOverrides,
+    Map<String, Dependency> dependencies,
+    Map<String, Dependency> devDependencies,
+    Map<String, Dependency> dependencyOverrides,
   })  : this.authors = authors ?? const [],
         this.homepage = homepage?.trim(),
         this.description = description?.trim(),
@@ -70,9 +70,9 @@ class Pubspec {
   factory Pubspec.fromJson(Map json) => _$PubspecFromJson(json);
 }
 
-Map<String, DependencyData> _getDeps(Map source) =>
+Map<String, Dependency> _getDeps(Map source) =>
     source?.map(
-        (k, v) => new MapEntry(k as String, new DependencyData.fromJson(v))) ??
+        (k, v) => new MapEntry(k as String, new Dependency.fromJson(v))) ??
     {};
 
 Version _versionFromString(String input) => new Version.parse(input);

@@ -4,69 +4,69 @@
 
 import 'package:pub_semver/pub_semver.dart';
 
-enum DependencyType { hosted, path, git, sdk }
+abstract class Dependency {
+  Dependency._();
 
-abstract class DependencyData {
-  DependencyType get type;
-
-  factory DependencyData.fromJson(dynamic data) {
+  factory Dependency.fromJson(dynamic data) {
     if (data == null) {
-      return new HostedData(VersionConstraint.any);
+      return new HostedDependency(VersionConstraint.any);
     } else if (data is String) {
-      return new HostedData(new VersionConstraint.parse(data));
+      return new HostedDependency(new VersionConstraint.parse(data));
     } else {
       var mapData = data as Map;
 
       var path = mapData['path'] as String;
       if (path != null) {
-        return new PathData(path);
+        return new PathDependency(path);
       }
 
       var git = mapData['git'];
       if (git != null) {
-        return new GitData.fromData(git);
+        return new GitDependency.fromData(git);
       }
 
       final sdk = mapData['sdk'];
       if (sdk != null) {
-        return new SdkData(sdk);
+        return new SdkDependency(sdk);
       }
 
       throw new ArgumentError.value(
           data, 'data', 'No clue how to deal with `$data`.');
     }
   }
-}
 
-class SdkData implements DependencyData {
-  final String name;
+  String get _info;
 
   @override
-  DependencyType get type => DependencyType.sdk;
+  String toString() => '$runtimeType: $_info';
+}
 
-  factory SdkData(Object data) {
+class SdkDependency extends Dependency {
+  final String name;
+
+  factory SdkDependency(Object data) {
     if (data is String) {
-      return new SdkData._(data);
+      return new SdkDependency._(data);
     } else {
       throw new ArgumentError.value(
           data, 'data', 'Does not support provided value.');
     }
   }
 
-  SdkData._(this.name);
+  SdkDependency._(this.name) : super._();
+
+  @override
+  String get _info => name;
 }
 
-class GitData implements DependencyData {
-  @override
-  DependencyType get type => DependencyType.git;
-
+class GitDependency extends Dependency {
   final Uri url;
   final String ref;
   final String path;
 
-  GitData(this.url, this.ref, this.path);
+  GitDependency(this.url, this.ref, this.path) : super._();
 
-  factory GitData.fromData(Object data) {
+  factory GitDependency.fromData(Object data) {
     String url;
     String path;
     String ref;
@@ -82,31 +82,28 @@ class GitData implements DependencyData {
           data, 'data', 'Does not support provided value.');
     }
 
-    return new GitData(Uri.parse(url), ref, path);
+    return new GitDependency(Uri.parse(url), ref, path);
   }
 
   @override
-  String toString() => 'GitData: url@$url';
+  String get _info => 'url@$url';
 }
 
-class PathData implements DependencyData {
-  @override
-  DependencyType get type => DependencyType.path;
-
+class PathDependency extends Dependency {
   final String path;
 
-  PathData(this.path);
+  PathDependency(this.path) : super._();
 
   @override
-  String toString() => 'PathData: path@$path';
+  String get _info => 'path@$path';
 }
 
 // TODO: support explicit host?
-class HostedData implements DependencyData {
-  @override
-  DependencyType get type => DependencyType.hosted;
-
+class HostedDependency extends Dependency {
   final VersionConstraint constraint;
 
-  HostedData(this.constraint);
+  HostedDependency(this.constraint) : super._();
+
+  @override
+  String get _info => constraint.toString();
 }
