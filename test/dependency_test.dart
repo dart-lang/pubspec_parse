@@ -14,10 +14,18 @@ void main() {
     expect(dep.toString(), 'HostedDependency: ^1.0.0');
   });
 
-  test('SdkDependency', () {
+  test('SdkDependency without version', () {
+    var dep = _dependency<SdkDependency>({'sdk': 'flutter'});
+    expect(dep.name, 'flutter');
+    expect(dep.version, isNull);
+    expect(dep.toString(), 'SdkDependency: flutter');
+  });
+
+  test('SdkDependency with version', () {
     var dep = _dependency<SdkDependency>(
         {'sdk': 'flutter', 'version': '>=1.2.3 <2.0.0'});
     expect(dep.name, 'flutter');
+    expect(dep.version.toString(), '>=1.2.3 <2.0.0');
     expect(dep.toString(), 'SdkDependency: flutter');
   });
 

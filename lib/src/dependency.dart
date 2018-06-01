@@ -71,12 +71,16 @@ abstract class Dependency {
 
 class SdkDependency extends Dependency {
   final String name;
+  final VersionConstraint version;
 
-  SdkDependency(this.name) : super._();
+  SdkDependency(this.name, {this.version}) : super._();
 
   factory SdkDependency.fromData(Map data) {
-    // TODO: handle version!
-    return new SdkDependency(data['sdk'] as String);
+    VersionConstraint version;
+    if (data.containsKey('version')) {
+      version = new VersionConstraint.parse(data['version'] as String);
+    }
+    return new SdkDependency(data['sdk'] as String, version: version);
   }
 
   @override
