@@ -70,9 +70,17 @@ class Pubspec {
   factory Pubspec.fromJson(Map json) => _$PubspecFromJson(json);
 }
 
+// TODO: maybe move this to `dependencies.dart`?
 Map<String, Dependency> _getDeps(Map source) =>
-    source?.map(
-        (k, v) => new MapEntry(k as String, new Dependency.fromJson(v))) ??
+    source?.map((k, v) {
+      var key = k as String;
+      var value = new Dependency.fromJson(v);
+      if (value == null) {
+        throw new CheckedFromJsonException(
+            source, key, 'Pubspec', 'Not a valid dependency value.');
+      }
+      return new MapEntry(key, value);
+    }) ??
     {};
 
 Version _versionFromString(String input) => new Version.parse(input);

@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:test/test.dart';
@@ -15,17 +16,51 @@ Matcher _throwsParsedYamlException(String prettyValue) => throwsA(allOf(
     const isInstanceOf<ParsedYamlException>(),
     new FeatureMatcher<ParsedYamlException>('formatMessage', (e) {
       var message = e.formatMessage;
-      printOnFailure("r'''\n$message'''");
-      if (e.innerStack != null) {
-        printOnFailure(Trace.format(e.innerStack, terse: true));
-      }
+      printOnFailure("Actual error format:\nr'''\n$message'''");
+      _printDebugParsedYamlException(e);
       return message;
     }, prettyValue)));
 
-Pubspec parse(Object content) => parsePubspec(_encodeJson(content));
+void _printDebugParsedYamlException(ParsedYamlException e) {
+  var innerError = e.innerError;
+  var innerStack = e.innerStack;
 
-void expectParseThrows(Object content, String expectedError) =>
-    expect(() => parse(content), _throwsParsedYamlException(expectedError));
+  if (e.innerError is CheckedFromJsonException) {
+    var cfje = e.innerError as CheckedFromJsonException;
+    if (cfje.innerError != null) {
+      innerError = cfje.innerError;
+      innerStack = cfje.innerStack;
+    }
+  }
+
+  if (innerError != null) {
+    var items = [innerError];
+    if (innerStack != null) {
+      items.add(Trace.format(innerStack, terse: true));
+    }
+
+    var content =
+        LineSplitter.split(items.join('\n')).map((e) => '  $e').join('\n');
+
+    printOnFailure('Inner error details:\n$content');
+  }
+}
+
+Pubspec parse(Object content, {bool quietOnError: false}) {
+  quietOnError ??= false;
+  try {
+    return parsePubspec(_encodeJson(content));
+  } on ParsedYamlException catch (e) {
+    if (!quietOnError) {
+      _printDebugParsedYamlException(e);
+    }
+    rethrow;
+  }
+}
+
+void expectParseThrows(Object content, String expectedError) => expect(
+    () => parse(content, quietOnError: true),
+    _throwsParsedYamlException(expectedError));
 
 // TODO(kevmoo) add this to pkg/matcher – is nice!
 class FeatureMatcher<T> extends CustomMatcher {

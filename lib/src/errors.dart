@@ -23,6 +23,8 @@ ParsedYamlException parsedYamlExceptionFromError(
             innerError: error, innerStack: stack);
       }
     }
+  } else if (innerError is ParsedYamlException) {
+    return innerError;
   }
 
   var yamlMap = error.map as YamlMap;

@@ -2,37 +2,51 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 abstract class Dependency {
   Dependency._();
 
-  factory Dependency.fromJson(dynamic data) {
+  /// Returns `null` if the data could not be parsed.
+  factory Dependency.fromJson(dynamic data, {String sourceKey}) {
     if (data == null) {
       return new HostedDependency(VersionConstraint.any);
     } else if (data is String) {
       return new HostedDependency(new VersionConstraint.parse(data));
-    } else {
-      var mapData = data as Map;
-
-      var path = mapData['path'] as String;
-      if (path != null) {
-        return new PathDependency(path);
+    } else if (data is Map) {
+      if (data.entries.isEmpty) {
+        // TODO: provide list of supported keys?
+        throw new CheckedFromJsonException(
+            data, sourceKey, 'Dependency', 'Must provide at least one key.');
       }
 
-      var git = mapData['git'];
-      if (git != null) {
-        return new GitDependency.fromData(git);
+      if (data.containsKey('sdk')) {
+        return new SdkDependency.fromData(data);
       }
 
-      final sdk = mapData['sdk'];
-      if (sdk != null) {
-        return new SdkDependency(sdk);
+      if (data.entries.length > 1) {
+        throw new CheckedFromJsonException(
+            data, sourceKey, 'Dependency', 'too many items');
       }
 
-      throw new ArgumentError.value(
-          data, 'data', 'No clue how to deal with `$data`.');
+      var entry = data.entries.single;
+      var key = entry.key as String;
+
+      if (entry.value == null) {
+        throw new CheckedFromJsonException(
+            data, key, 'Dependency', 'Cannot be null.');
+      }
+
+      switch (key) {
+        case 'path':
+          return new PathDependency.fromData(entry.value);
+        case 'git':
+          return new GitDependency.fromData(entry.value);
+      }
     }
+
+    return null;
   }
 
   String get _info;
@@ -44,16 +58,12 @@ abstract class Dependency {
 class SdkDependency extends Dependency {
   final String name;
 
-  factory SdkDependency(Object data) {
-    if (data is String) {
-      return new SdkDependency._(data);
-    } else {
-      throw new ArgumentError.value(
-          data, 'data', 'Does not support provided value.');
-    }
-  }
+  SdkDependency(this.name) : super._();
 
-  SdkDependency._(this.name) : super._();
+  factory SdkDependency.fromData(Map data) {
+    // TODO: handle version!
+    return new SdkDependency(data['sdk'] as String);
+  }
 
   @override
   String get _info => name;
@@ -79,7 +89,7 @@ class GitDependency extends Dependency {
       ref = data['ref'] as String;
     } else {
       throw new ArgumentError.value(
-          data, 'data', 'Does not support provided value.');
+          data, 'git', 'Does not support provided value.');
     }
 
     return new GitDependency(Uri.parse(url), ref, path);
@@ -93,6 +103,11 @@ class PathDependency extends Dependency {
   final String path;
 
   PathDependency(this.path) : super._();
+
+  factory PathDependency.fromData(Object data) {
+    // TODO: better error!
+    return new PathDependency(data as String);
+  }
 
   @override
   String get _info => 'path@$path';

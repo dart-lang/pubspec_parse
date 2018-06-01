@@ -40,12 +40,48 @@ void main() {
   });
 
   group('errors', () {
-    test('GitDependency', () {
-      var dep = _dependency<GitDependency>({'git': null});
-      //expect(dep.constraint.toString(), '^1.0.0');
-      expect(dep.toString(), 'HostedDependency: ^1.0.0');
+    test('List', () {
+      _expectThrows([], r'''
+line 4, column 10: Not a valid dependency value.
+  "dep": []
+         ^^''');
     });
-  }, skip: 'not yet!');
+
+    test('int', () {
+      _expectThrows(42, r'''
+line 4, column 10: Not a valid dependency value.
+  "dep": 42
+         ^^^''');
+    });
+
+    test('empty map', () {
+      _expectThrows({}, r'''
+line 4, column 10: Must provide at least one key.
+  "dep": {}
+         ^^''');
+    });
+
+    test('git - null content', () {
+      _expectThrows({'git': null}, r'''
+line 5, column 11: Cannot be null.
+   "git": null
+          ^^^^^''');
+    });
+
+    test('path - null content', () {
+      _expectThrows({'path': null}, r'''
+line 5, column 12: Cannot be null.
+   "path": null
+           ^^^^^''');
+    });
+  });
+}
+
+void _expectThrows(Object content, String expectedError) {
+  expectParseThrows({
+    'name': 'sample',
+    'dependencies': {'dep': content}
+  }, expectedError);
 }
 
 T _dependency<T extends Dependency>(Object content) {
