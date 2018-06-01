@@ -2,4 +2,3 @@
 
 - Initial release including the `Pubspec` class and a top-level `parsePubspec`
   function.
-
