@@ -61,6 +61,13 @@ line 4, column 10: Must provide at least one key.
          ^^''');
     });
 
+    test('map with too many keys', () {
+      _expectThrows({'path': 'a', 'git': 'b'}, r'''
+line 5, column 12: Expected only one key.
+   "path": "a",
+           ^^^''');
+    });
+
     test('git - null content', () {
       _expectThrows({'git': null}, r'''
 line 5, column 11: Cannot be null.
@@ -68,11 +75,25 @@ line 5, column 11: Cannot be null.
           ^^^^^''');
     });
 
+    test('git - int content', () {
+      _expectThrows({'git': 42}, r'''
+line 5, column 11: Must be a String or a Map.
+   "git": 42
+          ^^^''');
+    });
+
     test('path - null content', () {
       _expectThrows({'path': null}, r'''
 line 5, column 12: Cannot be null.
    "path": null
            ^^^^^''');
+    });
+
+    test('path - int content', () {
+      _expectThrows({'path': 42}, r'''
+line 5, column 12: Must be a String.
+   "path": 42
+           ^^^''');
     });
   });
 }

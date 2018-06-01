@@ -9,41 +9,55 @@ abstract class Dependency {
   Dependency._();
 
   /// Returns `null` if the data could not be parsed.
-  factory Dependency.fromJson(dynamic data, {String sourceKey}) {
+  factory Dependency.fromJson(dynamic data) {
     if (data == null) {
       return new HostedDependency(VersionConstraint.any);
     } else if (data is String) {
       return new HostedDependency(new VersionConstraint.parse(data));
     } else if (data is Map) {
-      if (data.entries.isEmpty) {
-        // TODO: provide list of supported keys?
+      try {
+        return new Dependency._fromMap(data);
+      } on ArgumentError catch (e) {
         throw new CheckedFromJsonException(
-            data, sourceKey, 'Dependency', 'Must provide at least one key.');
+            data, e.name, 'Dependency', e.message.toString());
       }
+    }
 
-      if (data.containsKey('sdk')) {
-        return new SdkDependency.fromData(data);
-      }
+    return null;
+  }
 
-      if (data.entries.length > 1) {
-        throw new CheckedFromJsonException(
-            data, sourceKey, 'Dependency', 'too many items');
-      }
+  factory Dependency._fromMap(Map data) {
+    if (data.entries.isEmpty) {
+      // TODO: provide list of supported keys?
+      throw new CheckedFromJsonException(
+          data, null, 'Dependency', 'Must provide at least one key.');
+    }
 
-      var entry = data.entries.single;
-      var key = entry.key as String;
+    if (data.containsKey('sdk')) {
+      return new SdkDependency.fromData(data);
+    }
 
-      if (entry.value == null) {
-        throw new CheckedFromJsonException(
-            data, key, 'Dependency', 'Cannot be null.');
-      }
+    if (data.entries.length > 1) {
+      throw new CheckedFromJsonException(
+          data,
+          data.keys.skip(1).first as String,
+          'Dependency',
+          'Expected only one key.');
+    }
 
-      switch (key) {
-        case 'path':
-          return new PathDependency.fromData(entry.value);
-        case 'git':
-          return new GitDependency.fromData(entry.value);
-      }
+    var entry = data.entries.single;
+    var key = entry.key as String;
+
+    if (entry.value == null) {
+      throw new CheckedFromJsonException(
+          data, key, 'Dependency', 'Cannot be null.');
+    }
+
+    switch (key) {
+      case 'path':
+        return new PathDependency.fromData(entry.value);
+      case 'git':
+        return new GitDependency.fromData(entry.value);
     }
 
     return null;
@@ -88,10 +102,10 @@ class GitDependency extends Dependency {
       path = data['path'] as String;
       ref = data['ref'] as String;
     } else {
-      throw new ArgumentError.value(
-          data, 'git', 'Does not support provided value.');
+      throw new ArgumentError.value(data, 'git', 'Must be a String or a Map.');
     }
 
+    // TODO: validate `url` is a valid URI
     return new GitDependency(Uri.parse(url), ref, path);
   }
 
@@ -105,8 +119,10 @@ class PathDependency extends Dependency {
   PathDependency(this.path) : super._();
 
   factory PathDependency.fromData(Object data) {
-    // TODO: better error!
-    return new PathDependency(data as String);
+    if (data is String) {
+      return new PathDependency(data);
+    }
+    throw new ArgumentError.value(data, 'path', 'Must be a String.');
   }
 
   @override
