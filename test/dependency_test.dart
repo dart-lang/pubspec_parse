@@ -194,13 +194,11 @@ void _gitDependency() {
   });
 
   test('string with user@ URL', () {
-    var dep =
-        _dependency<GitDependency>({'git': 'git@example.com:google/dep.git'});
+    var dep = _dependency<GitDependency>({'git': 'git@localhost:dep.git'});
     expect(dep.url.toString(), 'ssh://git@example.com/google/dep.git');
     expect(dep.path, isNull);
     expect(dep.ref, isNull);
-    expect(dep.toString(),
-        'GitDependency: url@ssh://git@example.com/google/dep.git');
+    expect(dep.toString(), 'GitDependency: url@ssh://git@localhost/dep.git');
   });
 
   test('string with random extra key fails', () {
