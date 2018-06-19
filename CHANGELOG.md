@@ -1,9 +1,10 @@
 ## 0.1.2
 
-- Handle superfluous `version` keys with `git` and `path` dependencies.
+- Allow superfluous `version` keys with `git` and `path` dependencies.
 - Improve errors when unsupported keys are provided in dependencies.
 - Provide better errors with invalid `sdk` dependency values.
-- Support "scp-like syntax" for Git SSH URIs.
+- Support "scp-like syntax" for Git SSH URIs in the form
+  `[user@]host.xz:path/to/repo.git/`.
 
 ## 0.1.1
 

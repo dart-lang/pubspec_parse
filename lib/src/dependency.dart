@@ -141,13 +141,7 @@ class GitDependency extends Dependency {
   String get _info => 'url@$url';
 }
 
-Uri parseGitUri(String value) {
-  var scpUri = _tryParseScpUri(value);
-  if (scpUri != null) {
-    return scpUri;
-  }
-  return Uri.parse(value);
-}
+Uri parseGitUri(String value) => _tryParseScpUri(value) ?? Uri.parse(value);
 
 /// Supports URIs like `[user@]host.xz:path/to/repo.git/`
 /// See https://git-scm.com/docs/git-clone#_git_urls_a_id_urls_a
