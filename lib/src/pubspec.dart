@@ -12,13 +12,15 @@ import 'errors.dart';
 part 'pubspec.g.dart';
 
 @JsonSerializable(createToJson: false)
+@ParseDepsConverter()
+@_VersionConverter()
+@_VersionConstraintMapConverter()
 class Pubspec {
   // TODO: executables
   // TODO: publish_to
 
   final String name;
 
-  @JsonKey(fromJson: _versionFromString)
   final Version version;
 
   final String description;
@@ -39,16 +41,15 @@ class Pubspec {
   final List<String> authors;
   final String documentation;
 
-  @JsonKey(fromJson: _environmentMap)
   final Map<String, VersionConstraint> environment;
 
-  @JsonKey(fromJson: parseDeps, nullable: false)
+  @JsonKey(nullable: false)
   final Map<String, Dependency> dependencies;
 
-  @JsonKey(name: 'dev_dependencies', fromJson: parseDeps, nullable: false)
+  @JsonKey(name: 'dev_dependencies', nullable: false)
   final Map<String, Dependency> devDependencies;
 
-  @JsonKey(name: 'dependency_overrides', fromJson: parseDeps, nullable: false)
+  @JsonKey(name: 'dependency_overrides', nullable: false)
   final Map<String, Dependency> dependencyOverrides;
 
   /// If [author] and [authors] are both provided, their values are combined
@@ -112,33 +113,54 @@ class Pubspec {
   }
 }
 
-Version _versionFromString(String input) => new Version.parse(input);
+class _VersionConverter implements JsonConverter<Version, String> {
+  const _VersionConverter();
 
-Map<String, VersionConstraint> _environmentMap(Map source) =>
-    source.map((k, value) {
-      var key = k as String;
-      if (key == 'dart') {
-        // github.com/dart-lang/pub/blob/d84173eeb03c3/lib/src/pubspec.dart#L342
-        // 'dart' is not allowed as a key!
-        throw new InvalidKeyException(
-            source, 'dart', 'Use "sdk" to for Dart SDK constraints.');
-      }
+  @override
+  Version fromJson(String json) => Version.parse(json);
 
-      VersionConstraint constraint;
-      if (value == null) {
-        constraint = null;
-      } else if (value is String) {
-        try {
-          constraint = new VersionConstraint.parse(value);
-        } on FormatException catch (e) {
-          throw new CheckedFromJsonException(source, key, 'Pubspec', e.message);
+  @override
+  String toJson(Version object) {
+    throw UnsupportedError('nope');
+  }
+}
+
+class _VersionConstraintMapConverter
+    implements JsonConverter<Map<String, VersionConstraint>, Map> {
+  const _VersionConstraintMapConverter();
+
+  @override
+  Map<String, VersionConstraint> fromJson(Map source) => source.map((k, value) {
+        var key = k as String;
+        if (key == 'dart') {
+          // github.com/dart-lang/pub/blob/d84173eeb03c3/lib/src/pubspec.dart#L342
+          // 'dart' is not allowed as a key!
+          throw new InvalidKeyException(
+              source, 'dart', 'Use "sdk" to for Dart SDK constraints.');
+        }
+
+        VersionConstraint constraint;
+        if (value == null) {
+          constraint = null;
+        } else if (value is String) {
+          try {
+            constraint = new VersionConstraint.parse(value);
+          } on FormatException catch (e) {
+            throw new CheckedFromJsonException(
+                source, key, 'Pubspec', e.message);
+          }
+
+          return new MapEntry(key, constraint);
+        } else {
+          throw new CheckedFromJsonException(
+              source, key, 'VersionConstraint', '`$value` is not a String.');
         }
 
         return new MapEntry(key, constraint);
-      } else {
-        throw new CheckedFromJsonException(
-            source, key, 'VersionConstraint', '`$value` is not a String.');
-      }
+      });
 
-      return new MapEntry(key, constraint);
-    });
+  @override
+  Map toJson(Map<String, VersionConstraint> object) {
+    throw UnsupportedError('nope');
+  }
+}

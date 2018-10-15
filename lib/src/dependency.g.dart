@@ -12,7 +12,7 @@ SdkDependency _$SdkDependencyFromJson(Map json) {
         requiredKeys: const ['sdk'], disallowNullValues: const ['sdk']);
     var val = SdkDependency($checkedConvert(json, 'sdk', (v) => v as String),
         version: $checkedConvert(json, 'version',
-            (v) => v == null ? null : _constraintFromString(v as String)));
+            (v) => const _ConstraintConverter().fromJson(v as String)));
     return val;
   });
 }
@@ -23,7 +23,7 @@ GitDependency _$GitDependencyFromJson(Map json) {
         requiredKeys: const ['url'], disallowNullValues: const ['url']);
     var val = GitDependency(
         $checkedConvert(
-            json, 'url', (v) => v == null ? null : parseGitUri(v as String)),
+            json, 'url', (v) => const _GitUriConverter().fromJson(v as String)),
         $checkedConvert(json, 'ref', (v) => v as String),
         $checkedConvert(json, 'path', (v) => v as String));
     return val;
@@ -37,7 +37,7 @@ HostedDependency _$HostedDependencyFromJson(Map json) {
         disallowNullValues: const ['hosted']);
     var val = HostedDependency(
         version: $checkedConvert(json, 'version',
-            (v) => v == null ? null : _constraintFromString(v as String)),
+            (v) => const _ConstraintConverter().fromJson(v as String)),
         hosted: $checkedConvert(json, 'hosted',
             (v) => v == null ? null : HostedDetails.fromJson(v)));
     return val;
@@ -52,8 +52,8 @@ HostedDetails _$HostedDetailsFromJson(Map json) {
         disallowNullValues: const ['name', 'url']);
     var val = HostedDetails(
         $checkedConvert(json, 'name', (v) => v as String),
-        $checkedConvert(
-            json, 'url', (v) => v == null ? null : parseGitUri(v as String)));
+        $checkedConvert(json, 'url',
+            (v) => const _GitUriConverter().fromJson(v as String)));
     return val;
   });
 }

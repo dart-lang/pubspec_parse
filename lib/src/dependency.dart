@@ -10,7 +10,19 @@ import 'errors.dart';
 
 part 'dependency.g.dart';
 
-Map<String, Dependency> parseDeps(Map source) =>
+class ParseDepsConverter
+    implements JsonConverter<Map<String, Dependency>, Map> {
+  const ParseDepsConverter();
+
+  @override
+  Map<String, Dependency> fromJson(Map json) => _parseDeps(json);
+
+  @override
+  Map<String, Dependency> toJson(Map object) =>
+      throw UnsupportedError('only fromJson is supported');
+}
+
+Map<String, Dependency> _parseDeps(Map source) =>
     source?.map((k, v) {
       var key = k as String;
       Dependency value;
@@ -105,9 +117,9 @@ abstract class Dependency {
 
 @JsonSerializable(createToJson: false)
 class SdkDependency extends Dependency {
-  @JsonKey(nullable: false, disallowNullValue: true, required: true)
+  @JsonKey(disallowNullValue: true, required: true)
   final String sdk;
-  @JsonKey(fromJson: _constraintFromString)
+  @_ConstraintConverter()
   final VersionConstraint version;
 
   SdkDependency(this.sdk, {this.version}) : super._();
@@ -118,7 +130,8 @@ class SdkDependency extends Dependency {
 
 @JsonSerializable(createToJson: false)
 class GitDependency extends Dependency {
-  @JsonKey(fromJson: parseGitUri, required: true, disallowNullValue: true)
+  @JsonKey(required: true, disallowNullValue: true)
+  @_GitUriConverter()
   final Uri url;
   final String ref;
   final String path;
@@ -139,6 +152,18 @@ class GitDependency extends Dependency {
 
   @override
   String get _info => 'url@$url';
+}
+
+class _GitUriConverter implements JsonConverter<Uri, String> {
+  const _GitUriConverter();
+
+  @override
+  Uri fromJson(String value) => parseGitUri(value);
+
+  @override
+  String toJson(Uri object) {
+    throw UnsupportedError('only fromJson is supported');
+  }
 }
 
 Uri parseGitUri(String value) => _tryParseScpUri(value) ?? Uri.parse(value);
@@ -192,7 +217,7 @@ class PathDependency extends Dependency {
 
 @JsonSerializable(createToJson: false, disallowUnrecognizedKeys: true)
 class HostedDependency extends Dependency {
-  @JsonKey(fromJson: _constraintFromString)
+  @_ConstraintConverter()
   final VersionConstraint version;
 
   @JsonKey(disallowNullValue: true)
@@ -211,7 +236,8 @@ class HostedDetails {
   @JsonKey(required: true, disallowNullValue: true)
   final String name;
 
-  @JsonKey(fromJson: parseGitUri, disallowNullValue: true)
+  @JsonKey(disallowNullValue: true)
+  @_GitUriConverter()
   final Uri url;
 
   HostedDetails(this.name, this.url);
@@ -229,5 +255,14 @@ class HostedDetails {
   }
 }
 
-VersionConstraint _constraintFromString(String input) =>
-    new VersionConstraint.parse(input);
+class _ConstraintConverter implements JsonConverter<VersionConstraint, String> {
+  const _ConstraintConverter();
+
+  @override
+  VersionConstraint fromJson(String json) => VersionConstraint.parse(json);
+
+  @override
+  String toJson(VersionConstraint object) {
+    throw UnsupportedError('We only support fromJson');
+  }
+}
