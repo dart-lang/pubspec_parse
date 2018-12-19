@@ -36,11 +36,11 @@ class Pubspec {
 
   /// Optional field to specify the source code repository of the package.
   /// Useful when a package has both a home page and a repository.
-  final String repository;
+  final Uri repository;
 
   /// Optional field to a web page where developers can report new issues or
   /// view existing ones.
-  final String issueTracker;
+  final Uri issueTracker;
 
   /// If there is exactly 1 value in [authors], returns it.
   ///
