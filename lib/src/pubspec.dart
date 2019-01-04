@@ -116,9 +116,30 @@ class Pubspec {
     }
   }
 
-  factory Pubspec.fromJson(Map json) => _$PubspecFromJson(json);
+  factory Pubspec.fromJson(Map json, {bool lenient = false}) {
+    lenient ??= false;
 
-  factory Pubspec.parse(String yaml, {sourceUrl}) {
+    if (lenient) {
+      for (;;) {
+        try {
+          return _$PubspecFromJson(json);
+        } on CheckedFromJsonException catch (e) {
+          if (e.map == json && json.containsKey(e.key)) {
+            json = Map.from(json);
+            json.remove(e.key);
+            continue;
+          }
+          rethrow;
+        }
+      }
+    } else {
+      return _$PubspecFromJson(json);
+    }
+  }
+
+  factory Pubspec.parse(String yaml, {sourceUrl, bool lenient = false}) {
+    lenient ??= false;
+
     final item = loadYaml(yaml, sourceUrl: sourceUrl);
 
     if (item == null) {
@@ -134,7 +155,7 @@ class Pubspec {
     }
 
     try {
-      return Pubspec.fromJson(item as YamlMap);
+      return Pubspec.fromJson(item as YamlMap, lenient: lenient);
     } on CheckedFromJsonException catch (error, stack) {
       throw parsedYamlExceptionFromError(error, stack);
     }
