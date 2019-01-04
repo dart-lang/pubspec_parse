@@ -132,9 +132,9 @@ class Pubspec {
           rethrow;
         }
       }
-    } else {
-      return _$PubspecFromJson(json);
     }
+
+    return _$PubspecFromJson(json);
   }
 
   factory Pubspec.parse(String yaml, {sourceUrl, bool lenient = false}) {
