@@ -121,6 +121,7 @@ class Pubspec {
 
     if (lenient) {
       for (;;) {
+        // Attempting to remove top-level properties that cause parsing errors.
         try {
           return _$PubspecFromJson(json);
         } on CheckedFromJsonException catch (e) {
