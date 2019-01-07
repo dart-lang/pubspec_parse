@@ -294,5 +294,19 @@ line 3, column 19: Unsupported value for `issue_tracker`.
       expect(value.repository, isNull);
       expect(value.issueTracker, isNull);
     });
+
+    test('deep error throws with lenient', () {
+      expect(
+          () => parse({
+                'name': 'foo',
+                'dependencies': {
+                  'foo': {
+                    'git': {'url': 1}
+                  },
+                },
+                'issue_tracker': {'x': 'y'},
+              }, skipTryPub: true, lenient: true),
+          throwsException);
+    });
   });
 }
