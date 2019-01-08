@@ -1,6 +1,6 @@
 ## 0.1.4
 
-- Parsing option: `lenient` to ignore format and type errors. 
+- Added `lenient` named argument to `Pubspec.fromJson` to ignore format and type errors. 
 
 ## 0.1.3
 

@@ -138,6 +138,10 @@ class Pubspec {
     return _$PubspecFromJson(json);
   }
 
+  /// Parses source [yaml] into [Pubspec].
+  ///
+  /// When [lenient] is set, top-level property-parsing or type cast errors are
+  /// ignored and `null` values are returned.
   factory Pubspec.parse(String yaml, {sourceUrl, bool lenient = false}) {
     lenient ??= false;
 
