@@ -120,7 +120,7 @@ class Pubspec {
     lenient ??= false;
 
     if (lenient) {
-      for (;;) {
+      while (json.isNotEmpty) {
         // Attempting to remove top-level properties that cause parsing errors.
         try {
           return _$PubspecFromJson(json);
