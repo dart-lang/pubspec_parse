@@ -8,7 +8,13 @@ dart_task:
   - test: -x presubmit-only
   - test: --run-skipped -t presubmit-only
   - dartfmt
-  - dartanalyzer: --fatal-infos --fatal-warnings .
+
+matrix:
+  include:
+    - dart: dev
+      dartanalyzer: --fatal-infos --fatal-warnings .
+    - dart: stable
+      dartanalyzer: --fatal-warnings .
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
