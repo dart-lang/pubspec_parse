@@ -11,9 +11,11 @@ dart_task:
 
 matrix:
   include:
-    - dart: dev
+    - name: 'dev only analyzer'
+      dart: 'dev'
       dartanalyzer: --fatal-infos --fatal-warnings .
-    - dart: stable
+    - name: 'stable only analyzer'
+      dart: 'stable'
       dartanalyzer: --fatal-warnings .
 
 # Only building master means that we don't run two builds for each pull request.
