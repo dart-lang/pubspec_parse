@@ -86,6 +86,8 @@ abstract class Dependency {
 
   String get _info;
 
+  T visit<T>(DependencyVisitor<T> visitor);
+
   @override
   String toString() => '$runtimeType: $_info';
 }
@@ -98,6 +100,11 @@ class SdkDependency extends Dependency {
   final VersionConstraint version;
 
   SdkDependency(this.sdk, {this.version}) : super._();
+
+  @override
+  T visit<T>(DependencyVisitor<T> visitor) {
+    return visitor.sdk(this);
+  }
 
   @override
   String get _info => sdk;
@@ -126,6 +133,11 @@ class GitDependency extends Dependency {
 
   @override
   String get _info => 'url@$url';
+
+  @override
+  T visit<T>(DependencyVisitor<T> visitor) {
+    return visitor.git(this);
+  }
 }
 
 Uri parseGitUri(String value) => _tryParseScpUri(value) ?? Uri.parse(value);
@@ -175,6 +187,11 @@ class PathDependency extends Dependency {
 
   @override
   String get _info => 'path@$path';
+
+  @override
+  T visit<T>(DependencyVisitor<T> visitor) {
+    return visitor.path(this);
+  }
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
@@ -191,6 +208,11 @@ class HostedDependency extends Dependency {
 
   @override
   String get _info => version.toString();
+
+  @override
+  T visit<T>(DependencyVisitor<T> visitor) {
+    return visitor.hosted(this);
+  }
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
@@ -218,3 +240,13 @@ class HostedDetails {
 
 VersionConstraint _constraintFromString(String input) =>
     VersionConstraint.parse(input);
+
+abstract class DependencyVisitor<T> {
+    T hosted(HostedDependency dependency);
+
+    T path(PathDependency dependency);
+
+    T sdk(SdkDependency dependency);
+
+    T git(GitDependency dependency);
+}

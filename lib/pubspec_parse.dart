@@ -8,5 +8,6 @@ export 'src/dependency.dart'
         HostedDependency,
         GitDependency,
         SdkDependency,
-        PathDependency;
+        PathDependency,
+        DependencyVisitor;
 export 'src/pubspec.dart' show Pubspec;

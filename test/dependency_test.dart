@@ -15,6 +15,7 @@ void main() {
   group('git', _gitDependency);
   group('sdk', _sdkDependency);
   group('path', _pathDependency);
+  group('dependency visitor', _dependencyVisitor);
 
   group('errors', () {
     test('List', () {
@@ -414,4 +415,37 @@ T _dependency<T extends Dependency>(Object content, {bool skipTryPub = false}) {
   expect(entry.key, 'dep');
 
   return entry.value as T;
+}
+
+void _dependencyVisitor() {
+  test('$GitDependency', () {
+    final dependency = GitDependency(null, null, null);
+    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+  });
+  test('$HostedDependency', () {
+    final dependency = HostedDependency(version: null, hosted: null);
+    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+  });
+  test('$HostedDependency', () {
+    final dependency = HostedDependency(version: null, hosted: null);
+    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+  });
+  test('$SdkDependency', () {
+    final dependency = SdkDependency(null, version: null);
+    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+  });
+}
+
+class _TestDependencyVisitor extends DependencyVisitor<Dependency> {
+  @override
+  GitDependency git(GitDependency dependency) => dependency;
+
+  @override
+  HostedDependency hosted(HostedDependency dependency) => dependency;
+
+  @override
+  PathDependency path(PathDependency dependency) => dependency;
+
+  @override
+  SdkDependency sdk(SdkDependency dependency) => dependency;
 }
