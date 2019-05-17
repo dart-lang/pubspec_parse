@@ -418,34 +418,31 @@ T _dependency<T extends Dependency>(Object content, {bool skipTryPub = false}) {
 }
 
 void _dependencyVisitor() {
+  final visitor = DependencyVisitor<Dependency>.create(
+      hostedDependency: (dep) => dep,
+      pathDependency: (dep) => dep,
+      gitDependency: (dep) => dep,
+      sdkDependency: (dep) => dep);
+
+  final git = GitDependency(null, null, null);
+  final hosted = HostedDependency(version: null, hosted: null);
+  final path = PathDependency(null);
+  final sdk = SdkDependency(null, version: null);
+
   test('$GitDependency', () {
-    final dependency = GitDependency(null, null, null);
-    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+    expect(git.visit<Dependency>(visitor), git);
+    expect(git.visit<Dependency>(visitor), isNot(hosted));
   });
   test('$HostedDependency', () {
-    final dependency = HostedDependency(version: null, hosted: null);
-    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+    expect(hosted.visit<Dependency>(visitor), hosted);
+    expect(hosted.visit<Dependency>(visitor), isNot(path));
   });
-  test('$HostedDependency', () {
-    final dependency = HostedDependency(version: null, hosted: null);
-    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+  test('$PathDependency', () {
+    expect(path.visit<Dependency>(visitor), path);
+    expect(path.visit<Dependency>(visitor), isNot(sdk));
   });
   test('$SdkDependency', () {
-    final dependency = SdkDependency(null, version: null);
-    expect(dependency.visit<Dependency>(_TestDependencyVisitor()), dependency);
+    expect(sdk.visit<Dependency>(visitor), sdk);
+    expect(sdk.visit<Dependency>(visitor), isNot(git));
   });
-}
-
-class _TestDependencyVisitor extends DependencyVisitor<Dependency> {
-  @override
-  GitDependency git(GitDependency dependency) => dependency;
-
-  @override
-  HostedDependency hosted(HostedDependency dependency) => dependency;
-
-  @override
-  PathDependency path(PathDependency dependency) => dependency;
-
-  @override
-  SdkDependency sdk(SdkDependency dependency) => dependency;
 }

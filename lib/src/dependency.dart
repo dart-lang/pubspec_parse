@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
@@ -242,11 +243,50 @@ VersionConstraint _constraintFromString(String input) =>
     VersionConstraint.parse(input);
 
 abstract class DependencyVisitor<T> {
-    T hosted(HostedDependency dependency);
+  factory DependencyVisitor.create({
+    @required T Function(GitDependency dependency) gitDependency,
+    @required T Function(HostedDependency dependency) hostedDependency,
+    @required T Function(PathDependency dependency) pathDependency,
+    @required T Function(SdkDependency dependency) sdkDependency,
+  }) =>
+      _AnonymousDependencyVisitor(
+          gitDependency: gitDependency,
+          hostedDependency: hostedDependency,
+          pathDependency: pathDependency,
+          sdkDependency: sdkDependency);
 
-    T path(PathDependency dependency);
+  T hosted(HostedDependency dependency);
 
-    T sdk(SdkDependency dependency);
+  T path(PathDependency dependency);
 
-    T git(GitDependency dependency);
+  T sdk(SdkDependency dependency);
+
+  T git(GitDependency dependency);
+
+  const DependencyVisitor();
+}
+
+class _AnonymousDependencyVisitor<T> extends DependencyVisitor<T> {
+  final T Function(GitDependency dependency) gitDependency;
+  final T Function(HostedDependency dependency) hostedDependency;
+  final T Function(PathDependency dependency) pathDependency;
+  final T Function(SdkDependency dependency) sdkDependency;
+
+  _AnonymousDependencyVisitor(
+      {@required this.gitDependency,
+      @required this.hostedDependency,
+      @required this.pathDependency,
+      @required this.sdkDependency});
+
+  @override
+  T git(GitDependency dependency) => gitDependency(dependency);
+
+  @override
+  T hosted(HostedDependency dependency) => hostedDependency(dependency);
+
+  @override
+  T path(PathDependency dependency) => pathDependency(dependency);
+
+  @override
+  T sdk(SdkDependency dependency) => sdkDependency(dependency);
 }
