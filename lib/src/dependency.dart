@@ -141,7 +141,8 @@ class GitDependency extends Dependency {
   }
 }
 
-Uri parseGitUri(String value) => _tryParseScpUri(value) ?? Uri.parse(value);
+Uri parseGitUri(String value) =>
+    value == null ? null : _tryParseScpUri(value) ?? Uri.parse(value);
 
 /// Supports URIs like `[user@]host.xz:path/to/repo.git/`
 /// See https://git-scm.com/docs/git-clone#_git_urls_a_id_urls_a
@@ -240,7 +241,7 @@ class HostedDetails {
 }
 
 VersionConstraint _constraintFromString(String input) =>
-    VersionConstraint.parse(input);
+    input == null ? null : VersionConstraint.parse(input);
 
 abstract class DependencyVisitor<T> {
   factory DependencyVisitor.create({
