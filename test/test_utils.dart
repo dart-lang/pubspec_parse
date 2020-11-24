@@ -13,6 +13,10 @@ import 'package:test/test.dart';
 
 import 'pub_utils.dart';
 
+const defaultEnvironment = {
+  'environment': {'sdk': '>=2.10.0 <3.0.0'},
+};
+
 String _encodeJson(Object input) =>
     const JsonEncoder.withIndent(' ').convert(input);
 

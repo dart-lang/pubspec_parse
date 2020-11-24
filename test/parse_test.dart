@@ -14,7 +14,10 @@ import 'test_utils.dart';
 
 void main() {
   test('minimal set values', () {
-    final value = parse({'name': 'sample'});
+    final value = parse({
+      'name': 'sample',
+      ...defaultEnvironment,
+    });
     expect(value.name, 'sample');
     expect(value.version, isNull);
     expect(value.publishTo, isNull);
@@ -23,7 +26,10 @@ void main() {
     // ignore: deprecated_member_use_from_same_package
     expect(value.author, isNull);
     expect(value.authors, isEmpty);
-    expect(value.environment, isEmpty);
+    expect(
+      value.environment,
+      {'sdk': VersionConstraint.parse('>=2.10.0 <3.0.0')},
+    );
     expect(value.documentation, isNull);
     expect(value.dependencies, isEmpty);
     expect(value.devDependencies, isEmpty);
@@ -70,11 +76,14 @@ void main() {
   test('environment values can be null', () {
     final value = parse({
       'name': 'sample',
-      'environment': {'sdk': null}
+      'environment': {
+        'sdk': '>=2.10.0 <3.0.0',
+        'bob': null,
+      }
     });
     expect(value.name, 'sample');
-    expect(value.environment, hasLength(1));
-    expect(value.environment, containsPair('sdk', isNull));
+    expect(value.environment, hasLength(2));
+    expect(value.environment, containsPair('bob', isNull));
   });
 
   group('publish_to', () {
@@ -120,7 +129,11 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
       'none': 'none'
     }.entries) {
       test('can be ${entry.key}', () {
-        final value = parse({'name': 'sample', 'publish_to': entry.value});
+        final value = parse({
+          'name': 'sample',
+          ...defaultEnvironment,
+          'publish_to': entry.value,
+        });
         expect(value.publishTo, entry.value);
       });
     }
@@ -128,7 +141,11 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
 
   group('author, authors', () {
     test('one author', () {
-      final value = parse({'name': 'sample', 'author': 'name@example.com'});
+      final value = parse({
+        'name': 'sample',
+        ...defaultEnvironment,
+        'author': 'name@example.com',
+      });
       // ignore: deprecated_member_use_from_same_package
       expect(value.author, 'name@example.com');
       expect(value.authors, ['name@example.com']);
@@ -137,6 +154,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
     test('one author, via authors', () {
       final value = parse({
         'name': 'sample',
+        ...defaultEnvironment,
         'authors': ['name@example.com']
       });
       // ignore: deprecated_member_use_from_same_package
@@ -147,6 +165,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
     test('many authors', () {
       final value = parse({
         'name': 'sample',
+        ...defaultEnvironment,
         'authors': ['name@example.com', 'name2@example.com']
       });
       // ignore: deprecated_member_use_from_same_package
@@ -157,6 +176,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
     test('author and authors', () {
       final value = parse({
         'name': 'sample',
+        ...defaultEnvironment,
         'author': 'name@example.com',
         'authors': ['name2@example.com']
       });
@@ -168,6 +188,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
     test('duplicate author values', () {
       final value = parse({
         'name': 'sample',
+        ...defaultEnvironment,
         'author': 'name@example.com',
         'authors': ['name@example.com', 'name@example.com']
       });
@@ -179,6 +200,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
     test('flutter', () {
       final value = parse({
         'name': 'sample',
+        ...defaultEnvironment,
         'flutter': {'key': 'value'},
       });
       expect(value.flutter, {'key': 'value'});
@@ -283,15 +305,16 @@ line 4, column 10: Unsupported value for "sdk". Could not parse version "silly".
       expectParseThrows(
         {
           'name': 'foo',
+          ...defaultEnvironment,
           'repository': {'x': 'y'},
         },
         r'''
-line 3, column 16: Unsupported value for "repository".
+line 6, column 16: Unsupported value for "repository".
   ╷
-3 │    "repository": {
+6 │    "repository": {
   │ ┌────────────────^
-4 │ │   "x": "y"
-5 │ └  }
+7 │ │   "x": "y"
+8 │ └  }
   ╵''',
         skipTryPub: true,
       );
@@ -360,6 +383,7 @@ line 1, column 1: "name" cannot be empty.
       final value = parse(
         {
           'name': 'foo',
+          ...defaultEnvironment,
           'repository': {'x': 'y'},
         },
         lenient: true,
@@ -372,6 +396,7 @@ line 1, column 1: "name" cannot be empty.
       final value = parse(
         {
           'name': 'foo',
+          ...defaultEnvironment,
           'issue_tracker': {'x': 'y'},
         },
         lenient: true,
@@ -384,6 +409,7 @@ line 1, column 1: "name" cannot be empty.
       final value = parse(
         {
           'name': 'foo',
+          ...defaultEnvironment,
           'repository': {'x': 'y'},
           'issue_tracker': {'x': 'y'},
         },

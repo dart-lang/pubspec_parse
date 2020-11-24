@@ -405,6 +405,7 @@ void _expectThrows(Object content, String expectedError) {
 T _dependency<T extends Dependency>(Object content, {bool skipTryPub = false}) {
   final value = parse({
     'name': 'sample',
+    ...defaultEnvironment,
     'dependencies': {'dep': content}
   }, skipTryPub: skipTryPub);
   expect(value.name, 'sample');
