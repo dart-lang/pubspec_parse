@@ -86,7 +86,7 @@ void main() {
   group('publish_to', () {
     for (var entry in {
       42: r'''
-line 3, column 16: Unsupported value for "publish_to".
+line 3, column 16: Unsupported value for "publish_to". type 'int' is not a subtype of type 'String' in type cast
   ╷
 3 │  "publish_to": 42
   │                ^^
@@ -298,7 +298,7 @@ line 4, column 10: Unsupported value for "sdk". Could not parse version "silly".
           'repository': {'x': 'y'},
         },
         r'''
-line 6, column 16: Unsupported value for "repository".
+line 6, column 16: Unsupported value for "repository". type 'YamlMap' is not a subtype of type 'String' in type cast
   ╷
 6 │    "repository": {
   │ ┌────────────────^
@@ -316,7 +316,7 @@ line 6, column 16: Unsupported value for "repository".
           'issue_tracker': {'x': 'y'},
         },
         r'''
-line 3, column 19: Unsupported value for "issue_tracker".
+line 3, column 19: Unsupported value for "issue_tracker". type 'YamlMap' is not a subtype of type 'String' in type cast
   ╷
 3 │    "issue_tracker": {
   │ ┌───────────────────^
