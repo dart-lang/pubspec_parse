@@ -25,7 +25,7 @@ void main() {
     expect(value.authors, isEmpty);
     expect(
       value.environment,
-      {'sdk': VersionConstraint.parse('>=2.10.0 <3.0.0')},
+      {'sdk': VersionConstraint.parse('>=2.7.0 <3.0.0')},
     );
     expect(value.documentation, isNull);
     expect(value.dependencies, isEmpty);
@@ -74,7 +74,7 @@ void main() {
     final value = parse({
       'name': 'sample',
       'environment': {
-        'sdk': '>=2.10.0 <3.0.0',
+        'sdk': '>=2.7.0 <3.0.0',
         'bob': null,
       }
     });

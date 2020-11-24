@@ -15,7 +15,7 @@ import 'pub_utils.dart';
 
 const defaultPubspec = {
   'name': 'sample',
-  'environment': {'sdk': '>=2.10.0 <3.0.0'},
+  'environment': {'sdk': '>=2.7.0 <3.0.0'},
 };
 
 String _encodeJson(Object input) =>
