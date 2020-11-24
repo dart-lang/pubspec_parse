@@ -14,10 +14,7 @@ import 'test_utils.dart';
 
 void main() {
   test('minimal set values', () {
-    final value = parse({
-      'name': 'sample',
-      ...defaultEnvironment,
-    });
+    final value = parse(defaultPubspec);
     expect(value.name, 'sample');
     expect(value.version, isNull);
     expect(value.publishTo, isNull);
@@ -130,8 +127,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
     }.entries) {
       test('can be ${entry.key}', () {
         final value = parse({
-          'name': 'sample',
-          ...defaultEnvironment,
+          ...defaultPubspec,
           'publish_to': entry.value,
         });
         expect(value.publishTo, entry.value);
@@ -142,8 +138,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
   group('author, authors', () {
     test('one author', () {
       final value = parse({
-        'name': 'sample',
-        ...defaultEnvironment,
+        ...defaultPubspec,
         'author': 'name@example.com',
       });
       // ignore: deprecated_member_use_from_same_package
@@ -153,8 +148,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
 
     test('one author, via authors', () {
       final value = parse({
-        'name': 'sample',
-        ...defaultEnvironment,
+        ...defaultPubspec,
         'authors': ['name@example.com']
       });
       // ignore: deprecated_member_use_from_same_package
@@ -164,8 +158,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
 
     test('many authors', () {
       final value = parse({
-        'name': 'sample',
-        ...defaultEnvironment,
+        ...defaultPubspec,
         'authors': ['name@example.com', 'name2@example.com']
       });
       // ignore: deprecated_member_use_from_same_package
@@ -175,8 +168,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
 
     test('author and authors', () {
       final value = parse({
-        'name': 'sample',
-        ...defaultEnvironment,
+        ...defaultPubspec,
         'author': 'name@example.com',
         'authors': ['name2@example.com']
       });
@@ -187,8 +179,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
 
     test('duplicate author values', () {
       final value = parse({
-        'name': 'sample',
-        ...defaultEnvironment,
+        ...defaultPubspec,
         'author': 'name@example.com',
         'authors': ['name@example.com', 'name@example.com']
       });
@@ -199,8 +190,7 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
 
     test('flutter', () {
       final value = parse({
-        'name': 'sample',
-        ...defaultEnvironment,
+        ...defaultPubspec,
         'flutter': {'key': 'value'},
       });
       expect(value.flutter, {'key': 'value'});
@@ -304,8 +294,7 @@ line 4, column 10: Unsupported value for "sdk". Could not parse version "silly".
     test('bad repository url', () {
       expectParseThrows(
         {
-          'name': 'foo',
-          ...defaultEnvironment,
+          ...defaultPubspec,
           'repository': {'x': 'y'},
         },
         r'''
@@ -323,7 +312,7 @@ line 6, column 16: Unsupported value for "repository".
     test('bad issue_tracker url', () {
       expectParseThrows(
         {
-          'name': 'foo',
+          'name': 'sample',
           'issue_tracker': {'x': 'y'},
         },
         r'''
@@ -382,40 +371,37 @@ line 1, column 1: "name" cannot be empty.
     test('bad repository url', () {
       final value = parse(
         {
-          'name': 'foo',
-          ...defaultEnvironment,
+          ...defaultPubspec,
           'repository': {'x': 'y'},
         },
         lenient: true,
       );
-      expect(value.name, 'foo');
+      expect(value.name, 'sample');
       expect(value.repository, isNull);
     });
 
     test('bad issue_tracker url', () {
       final value = parse(
         {
-          'name': 'foo',
-          ...defaultEnvironment,
+          ...defaultPubspec,
           'issue_tracker': {'x': 'y'},
         },
         lenient: true,
       );
-      expect(value.name, 'foo');
+      expect(value.name, 'sample');
       expect(value.issueTracker, isNull);
     });
 
     test('multiple bad values', () {
       final value = parse(
         {
-          'name': 'foo',
-          ...defaultEnvironment,
+          ...defaultPubspec,
           'repository': {'x': 'y'},
           'issue_tracker': {'x': 'y'},
         },
         lenient: true,
       );
-      expect(value.name, 'foo');
+      expect(value.name, 'sample');
       expect(value.repository, isNull);
       expect(value.issueTracker, isNull);
     });
@@ -423,7 +409,7 @@ line 1, column 1: "name" cannot be empty.
     test('deep error throws with lenient', () {
       expect(
           () => parse({
-                'name': 'foo',
+                'name': 'sample',
                 'dependencies': {
                   'foo': {
                     'git': {'url': 1}

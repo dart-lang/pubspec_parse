@@ -13,7 +13,8 @@ import 'package:test/test.dart';
 
 import 'pub_utils.dart';
 
-const defaultEnvironment = {
+const defaultPubspec = {
+  'name': 'sample',
   'environment': {'sdk': '>=2.10.0 <3.0.0'},
 };
 
