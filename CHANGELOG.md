@@ -1,6 +1,6 @@
 ## 0.1.7
 
-- Allow `package:json_annotation` `v3.x`.
+- Allow `package:yaml` `v3.x`.
 
 ## 0.1.6
 
