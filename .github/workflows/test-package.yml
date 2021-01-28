@@ -57,7 +57,7 @@ jobs:
         name: Install dependencies
         run: dart pub get
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart test --platform vm --run-skipped
         if: always() && steps.install.outcome == 'success'
 
   # Run tests on a matrix consisting of two dimensions:
@@ -81,5 +81,5 @@ jobs:
         name: Install dependencies
         run: dart pub get
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart test --platform vm --run-skipped
         if: always() && steps.install.outcome == 'success'
