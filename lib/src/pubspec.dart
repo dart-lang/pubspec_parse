@@ -14,37 +14,39 @@ part 'pubspec.g.dart';
 class Pubspec {
   // TODO: executables
 
+  @JsonKey(required: true, disallowNullValue: true)
   final String name;
 
   @JsonKey(fromJson: _versionFromString)
-  final Version version;
+  final Version? version;
 
-  final String description;
+  final String? description;
 
   /// This should be a URL pointing to the website for the package.
-  final String homepage;
+  final String? homepage;
 
   /// Specifies where to publish this package.
   ///
   /// Accepted values: `null`, `'none'` or an `http` or `https` URL.
   ///
   /// [More information](https://dart.dev/tools/pub/pubspec#publish_to).
-  final String publishTo;
+  final String? publishTo;
 
   /// Optional field to specify the source code repository of the package.
   /// Useful when a package has both a home page and a repository.
-  final Uri repository;
+  final Uri? repository;
 
   /// Optional field to a web page where developers can report new issues or
   /// view existing ones.
-  final Uri issueTracker;
+  final Uri? issueTracker;
 
   /// If there is exactly 1 value in [authors], returns it.
   ///
   /// If there are 0 or more than 1, returns `null`.
   @Deprecated(
-      'Here for completeness, but not recommended. Use `authors` instead.')
-  String get author {
+    'Here for completeness, but not recommended. Use `authors` instead.',
+  )
+  String? get author {
     if (authors.length == 1) {
       return authors.single;
     }
@@ -52,18 +54,18 @@ class Pubspec {
   }
 
   final List<String> authors;
-  final String documentation;
+  final String? documentation;
 
   @JsonKey(fromJson: _environmentMap)
-  final Map<String, VersionConstraint> environment;
+  final Map<String, VersionConstraint?>? environment;
 
-  @JsonKey(fromJson: parseDeps, nullable: false)
+  @JsonKey(fromJson: parseDeps)
   final Map<String, Dependency> dependencies;
 
-  @JsonKey(fromJson: parseDeps, nullable: false)
+  @JsonKey(fromJson: parseDeps)
   final Map<String, Dependency> devDependencies;
 
-  @JsonKey(fromJson: parseDeps, nullable: false)
+  @JsonKey(fromJson: parseDeps)
   final Map<String, Dependency> dependencyOverrides;
 
   /// Optional configuration specific to [Flutter](https://flutter.io/)
@@ -72,7 +74,7 @@ class Pubspec {
   /// May include
   /// [assets](https://flutter.io/docs/development/ui/assets-and-images)
   /// and other settings.
-  final Map<String, dynamic> flutter;
+  final Map<String, dynamic>? flutter;
 
   /// If [author] and [authors] are both provided, their values are combined
   /// with duplicates eliminated.
@@ -80,30 +82,30 @@ class Pubspec {
     this.name, {
     this.version,
     this.publishTo,
-    String author,
-    List<String> authors,
-    Map<String, VersionConstraint> environment,
+    String? author,
+    List<String>? authors,
+    Map<String, VersionConstraint?>? environment,
     this.homepage,
     this.repository,
     this.issueTracker,
     this.documentation,
     this.description,
-    Map<String, Dependency> dependencies,
-    Map<String, Dependency> devDependencies,
-    Map<String, Dependency> dependencyOverrides,
+    Map<String, Dependency>? dependencies,
+    Map<String, Dependency>? devDependencies,
+    Map<String, Dependency>? dependencyOverrides,
     this.flutter,
   })  : authors = _normalizeAuthors(author, authors),
         environment = environment ?? const {},
         dependencies = dependencies ?? const {},
         devDependencies = devDependencies ?? const {},
         dependencyOverrides = dependencyOverrides ?? const {} {
-    if (name == null || name.isEmpty) {
+    if (name.isEmpty) {
       throw ArgumentError.value(name, 'name', '"name" cannot be empty.');
     }
 
     if (publishTo != null && publishTo != 'none') {
       try {
-        final targetUri = Uri.parse(publishTo);
+        final targetUri = Uri.parse(publishTo!);
         if (!(targetUri.isScheme('http') || targetUri.isScheme('https'))) {
           throw const FormatException('Must be an http or https URL.');
         }
@@ -114,8 +116,6 @@ class Pubspec {
   }
 
   factory Pubspec.fromJson(Map json, {bool lenient = false}) {
-    lenient ??= false;
-
     if (lenient) {
       while (json.isNotEmpty) {
         // Attempting to remove top-level properties that cause parsing errors.
@@ -138,15 +138,14 @@ class Pubspec {
   ///
   /// When [lenient] is set, top-level property-parsing or type cast errors are
   /// ignored and `null` values are returned.
-  factory Pubspec.parse(String yaml, {sourceUrl, bool lenient = false}) {
-    lenient ??= false;
+  factory Pubspec.parse(String yaml, {Uri? sourceUrl, bool lenient = false}) =>
+      checkedYamlDecode(
+        yaml,
+        (map) => Pubspec.fromJson(map!, lenient: lenient),
+        sourceUrl: sourceUrl,
+      );
 
-    return checkedYamlDecode(
-        yaml, (map) => Pubspec.fromJson(map, lenient: lenient),
-        sourceUrl: sourceUrl);
-  }
-
-  static List<String> _normalizeAuthors(String author, List<String> authors) {
+  static List<String> _normalizeAuthors(String? author, List<String>? authors) {
     final value = <String>{};
     if (author != null) {
       value.add(author);
@@ -158,10 +157,10 @@ class Pubspec {
   }
 }
 
-Version _versionFromString(String input) =>
+Version? _versionFromString(String? input) =>
     input == null ? null : Version.parse(input);
 
-Map<String, VersionConstraint> _environmentMap(Map source) =>
+Map<String, VersionConstraint?>? _environmentMap(Map? source) =>
     source?.map((k, value) {
       final key = k as String;
       if (key == 'dart') {
@@ -176,7 +175,7 @@ Map<String, VersionConstraint> _environmentMap(Map source) =>
         );
       }
 
-      VersionConstraint constraint;
+      VersionConstraint? constraint;
       if (value == null) {
         constraint = null;
       } else if (value is String) {

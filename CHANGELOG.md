@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Migrate to null-safety.
+
 ## 0.1.8
 
 - Allow the latest `package:pub_semver`.

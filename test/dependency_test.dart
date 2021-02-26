@@ -112,8 +112,8 @@ line 4, column 10: Unsupported value for "dep". Could not parse version "not a v
       'hosted': {'name': 'hosted_name', 'url': 'hosted_url'}
     });
     expect(dep.version.toString(), '^1.0.0');
-    expect(dep.hosted.name, 'hosted_name');
-    expect(dep.hosted.url.toString(), 'hosted_url');
+    expect(dep.hosted!.name, 'hosted_name');
+    expect(dep.hosted!.url.toString(), 'hosted_url');
     expect(dep.toString(), 'HostedDependency: ^1.0.0');
   });
 
@@ -149,16 +149,16 @@ line 10, column 4: Unrecognized keys: [not_supported]; supported keys: [sdk, git
     final dep = _dependency<HostedDependency>(
         {'version': '^1.0.0', 'hosted': 'hosted_name'});
     expect(dep.version.toString(), '^1.0.0');
-    expect(dep.hosted.name, 'hosted_name');
-    expect(dep.hosted.url, isNull);
+    expect(dep.hosted!.name, 'hosted_name');
+    expect(dep.hosted!.url, isNull);
     expect(dep.toString(), 'HostedDependency: ^1.0.0');
   });
 
   test('map w/ hosted as String', () {
     final dep = _dependency<HostedDependency>({'hosted': 'hosted_name'});
     expect(dep.version, VersionConstraint.any);
-    expect(dep.hosted.name, 'hosted_name');
-    expect(dep.hosted.url, isNull);
+    expect(dep.hosted!.name, 'hosted_name');
+    expect(dep.hosted!.url, isNull);
     expect(dep.toString(), 'HostedDependency: any');
   });
 
@@ -186,7 +186,7 @@ void _sdkDependency() {
   test('without version', () {
     final dep = _dependency<SdkDependency>({'sdk': 'flutter'});
     expect(dep.sdk, 'flutter');
-    expect(dep.version, isNull);
+    expect(dep.version, VersionConstraint.any);
     expect(dep.toString(), 'SdkDependency: flutter');
   });
 
@@ -402,7 +402,10 @@ void _expectThrows(Object content, String expectedError) {
   }, expectedError);
 }
 
-T _dependency<T extends Dependency>(Object content, {bool skipTryPub = false}) {
+T _dependency<T extends Dependency>(
+  Object? content, {
+  bool skipTryPub = false,
+}) {
   final value = parse({
     ...defaultPubspec,
     'dependencies': {'dep': content}

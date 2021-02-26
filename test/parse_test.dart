@@ -86,7 +86,7 @@ void main() {
   group('publish_to', () {
     for (var entry in {
       42: r'''
-line 3, column 16: Unsupported value for "publish_to". type 'int' is not a subtype of type 'String' in type cast
+line 3, column 16: Unsupported value for "publish_to". type 'int' is not a subtype of type 'String?' in type cast
   ╷
 3 │  "publish_to": 42
   │                ^^
@@ -230,12 +230,39 @@ line 1, column 1: Not a map
     });
 
     test('missing name', () {
-      expectParseThrows({}, r'''
-line 1, column 1: "name" cannot be empty.
+      expectParseThrows(
+        {},
+        r'''
+line 1, column 1: Required keys are missing: name.
   ╷
 1 │ {}
   │ ^^
-  ╵''');
+  ╵''',
+      );
+    });
+
+    test('null name value', () {
+      expectParseThrows(
+        {'name': null},
+        r'''
+line 2, column 2: These keys had `null` values, which is not allowed: [name]
+  ╷
+2 │  "name": null
+  │  ^^^^^^
+  ╵''',
+      );
+    });
+
+    test('empty name value', () {
+      expectParseThrows(
+        {'name': ''},
+        r'''
+line 2, column 10: Unsupported value for "name". "name" cannot be empty.
+  ╷
+2 │  "name": ""
+  │          ^^
+  ╵''',
+      );
     });
 
     test('"dart" is an invalid environment key', () {
@@ -359,7 +386,7 @@ line 1, column 1: Not a map
       expectParseThrows(
         {},
         r'''
-line 1, column 1: "name" cannot be empty.
+line 1, column 1: Required keys are missing: name.
   ╷
 1 │ {}
   │ ^^
