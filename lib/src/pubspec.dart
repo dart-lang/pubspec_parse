@@ -44,7 +44,7 @@ class Pubspec {
   ///
   /// If there are 0 or more than 1, returns `null`.
   @Deprecated(
-    'Here for completeness, but not recommended. Use `authors` instead.',
+    'See https://dart.dev/tools/pub/pubspec#authorauthors',
   )
   String? get author {
     if (authors.length == 1) {
@@ -53,6 +53,9 @@ class Pubspec {
     return null;
   }
 
+  @Deprecated(
+    'See https://dart.dev/tools/pub/pubspec#authorauthors',
+  )
   final List<String> authors;
   final String? documentation;
 
@@ -82,8 +85,14 @@ class Pubspec {
     this.name, {
     this.version,
     this.publishTo,
-    String? author,
-    List<String>? authors,
+    @Deprecated(
+      'See https://dart.dev/tools/pub/pubspec#authorauthors',
+    )
+        String? author,
+    @Deprecated(
+      'See https://dart.dev/tools/pub/pubspec#authorauthors',
+    )
+        List<String>? authors,
     Map<String, VersionConstraint?>? environment,
     this.homepage,
     this.repository,
@@ -94,7 +103,9 @@ class Pubspec {
     Map<String, Dependency>? devDependencies,
     Map<String, Dependency>? dependencyOverrides,
     this.flutter,
-  })  : authors = _normalizeAuthors(author, authors),
+  })  :
+        // ignore: deprecated_member_use_from_same_package
+        authors = _normalizeAuthors(author, authors),
         environment = environment ?? const {},
         dependencies = dependencies ?? const {},
         devDependencies = devDependencies ?? const {},
@@ -146,13 +157,10 @@ class Pubspec {
       );
 
   static List<String> _normalizeAuthors(String? author, List<String>? authors) {
-    final value = <String>{};
-    if (author != null) {
-      value.add(author);
-    }
-    if (authors != null) {
-      value.addAll(authors);
-    }
+    final value = <String>{
+      if (author != null) author,
+      if (authors != null) ...authors,
+    };
     return value.toList();
   }
 }

@@ -27,8 +27,8 @@ GitDependency _$GitDependencyFromJson(Map json) {
         requiredKeys: const ['url'], disallowNullValues: const ['url']);
     final val = GitDependency(
       $checkedConvert(json, 'url', (v) => parseGitUri(v as String)),
-      $checkedConvert(json, 'ref', (v) => v as String?),
-      $checkedConvert(json, 'path', (v) => v as String?),
+      ref: $checkedConvert(json, 'ref', (v) => v as String?),
+      path: $checkedConvert(json, 'path', (v) => v as String?),
     );
     return val;
   });

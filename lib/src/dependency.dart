@@ -36,7 +36,7 @@ Map<String, Dependency> parseDeps(Map? source) =>
 const _sourceKeys = ['sdk', 'git', 'path', 'hosted'];
 
 /// Returns `null` if the data could not be parsed.
-Dependency? _fromJson(dynamic data) {
+Dependency? _fromJson(Object? data) {
   if (data is String || data == null) {
     return _$HostedDependencyFromJson({'version': data});
   }
@@ -113,7 +113,7 @@ class GitDependency extends Dependency {
   final String? ref;
   final String? path;
 
-  GitDependency(this.url, this.ref, this.path) : super._();
+  GitDependency(this.url, {this.ref, this.path}) : super._();
 
   factory GitDependency.fromData(Object? data) {
     if (data is String) {

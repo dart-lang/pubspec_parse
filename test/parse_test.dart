@@ -2,9 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// TODO(kevmoo) Remove when github.com/dart-lang/sdk/commit/dac5a56422 lands
-// in a shipped SDK.
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use_from_same_package
 library parse_test;
 
 import 'package:pub_semver/pub_semver.dart';
@@ -20,7 +18,6 @@ void main() {
     expect(value.publishTo, isNull);
     expect(value.description, isNull);
     expect(value.homepage, isNull);
-    // ignore: deprecated_member_use_from_same_package
     expect(value.author, isNull);
     expect(value.authors, isEmpty);
     expect(
@@ -56,7 +53,6 @@ void main() {
     expect(value.publishTo, 'none');
     expect(value.description, 'description');
     expect(value.homepage, 'homepage');
-    // ignore: deprecated_member_use_from_same_package
     expect(value.author, 'name@example.com');
     expect(value.authors, ['name@example.com']);
     expect(value.environment, hasLength(1));
@@ -141,7 +137,6 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
         ...defaultPubspec,
         'author': 'name@example.com',
       });
-      // ignore: deprecated_member_use_from_same_package
       expect(value.author, 'name@example.com');
       expect(value.authors, ['name@example.com']);
     });
@@ -151,7 +146,6 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
         ...defaultPubspec,
         'authors': ['name@example.com']
       });
-      // ignore: deprecated_member_use_from_same_package
       expect(value.author, 'name@example.com');
       expect(value.authors, ['name@example.com']);
     });
@@ -161,7 +155,6 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
         ...defaultPubspec,
         'authors': ['name@example.com', 'name2@example.com']
       });
-      // ignore: deprecated_member_use_from_same_package
       expect(value.author, isNull);
       expect(value.authors, ['name@example.com', 'name2@example.com']);
     });
@@ -172,7 +165,6 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
         'author': 'name@example.com',
         'authors': ['name2@example.com']
       });
-      // ignore: deprecated_member_use_from_same_package
       expect(value.author, isNull);
       expect(value.authors, ['name@example.com', 'name2@example.com']);
     });
@@ -183,7 +175,6 @@ line 3, column 16: Unsupported value for "publish_to". Must be an http or https 
         'author': 'name@example.com',
         'authors': ['name@example.com', 'name@example.com']
       });
-      // ignore: deprecated_member_use_from_same_package
       expect(value.author, 'name@example.com');
       expect(value.authors, ['name@example.com']);
     });
