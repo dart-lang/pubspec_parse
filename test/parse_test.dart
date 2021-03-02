@@ -377,7 +377,7 @@ line 1, column 1: Not a map
       expectParseThrows(
         {},
         r'''
-line 1, column 1: Required keys are missing: name.
+line 1, column 1: Missing key "name". type 'Null' is not a subtype of type 'String' in type cast
   ╷
 1 │ {}
   │ ^^

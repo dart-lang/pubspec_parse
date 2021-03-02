@@ -377,10 +377,12 @@ line 6, column 4: Unrecognized keys: [bob]; supported keys: [sdk, git, path, hos
     _expectThrows(
       {'path': null},
       r'''
-line 1, column 1: Missing key "name". type 'Null' is not a subtype of type 'String' in type cast
+line 5, column 12: Unsupported value for "path". Must be a String.
   ╷
-1 │ {}
-  │ ^^
+5 │      "path": null
+  │ ┌────────────^
+6 │ │   }
+  │ └──^
   ╵''',
     );
   });
