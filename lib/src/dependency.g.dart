@@ -10,8 +10,6 @@ part of 'dependency.dart';
 
 SdkDependency _$SdkDependencyFromJson(Map json) {
   return $checkedNew('SdkDependency', json, () {
-    $checkKeys(json,
-        requiredKeys: const ['sdk'], disallowNullValues: const ['sdk']);
     final val = SdkDependency(
       $checkedConvert(json, 'sdk', (v) => v as String),
       version: $checkedConvert(
@@ -23,8 +21,6 @@ SdkDependency _$SdkDependencyFromJson(Map json) {
 
 GitDependency _$GitDependencyFromJson(Map json) {
   return $checkedNew('GitDependency', json, () {
-    $checkKeys(json,
-        requiredKeys: const ['url'], disallowNullValues: const ['url']);
     final val = GitDependency(
       $checkedConvert(json, 'url', (v) => parseGitUri(v as String)),
       ref: $checkedConvert(json, 'ref', (v) => v as String?),
@@ -52,9 +48,7 @@ HostedDependency _$HostedDependencyFromJson(Map json) {
 HostedDetails _$HostedDetailsFromJson(Map json) {
   return $checkedNew('HostedDetails', json, () {
     $checkKeys(json,
-        allowedKeys: const ['name', 'url'],
-        requiredKeys: const ['name'],
-        disallowNullValues: const ['name', 'url']);
+        allowedKeys: const ['name', 'url'], disallowNullValues: const ['url']);
     final val = HostedDetails(
       $checkedConvert(json, 'name', (v) => v as String),
       $checkedConvert(json, 'url', (v) => parseGitUriOrNull(v as String?)),

@@ -9,7 +9,7 @@ environment:
   sdk: '>=2.12.0-0 <3.0.0'
 
 dependencies:
-  checked_yaml: ^2.0.0
+  checked_yaml: ^2.0.1
   collection: ^1.15.0
   json_annotation: ^4.0.0
   pub_semver: ^2.0.0
@@ -30,7 +30,7 @@ dev_dependencies:
 
 dependency_overrides:
   # Need to update dependencies on these packages
-  build_config: 0.4.4
+  build_config: 0.4.6
   build_runner: any
-  checked_yaml: 2.0.0
+  checked_yaml: ^2.0.1
   json_annotation: 4.0.0

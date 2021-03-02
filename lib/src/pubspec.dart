@@ -14,7 +14,6 @@ part 'pubspec.g.dart';
 class Pubspec {
   // TODO: executables
 
-  @JsonKey(required: true, disallowNullValue: true)
   final String name;
 
   @JsonKey(fromJson: _versionFromString)

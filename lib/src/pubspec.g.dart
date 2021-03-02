@@ -10,8 +10,6 @@ part of 'pubspec.dart';
 
 Pubspec _$PubspecFromJson(Map json) {
   return $checkedNew('Pubspec', json, () {
-    $checkKeys(json,
-        requiredKeys: const ['name'], disallowNullValues: const ['name']);
     final val = Pubspec(
       $checkedConvert(json, 'name', (v) => v as String),
       version: $checkedConvert(

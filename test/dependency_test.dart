@@ -202,10 +202,12 @@ void _sdkDependency() {
     _expectThrows(
       {'sdk': null},
       r'''
-line 5, column 4: These keys had `null` values, which is not allowed: [sdk]
+line 5, column 11: Unsupported value for "sdk". type 'Null' is not a subtype of type 'String' in type cast
   ╷
-5 │    "sdk": null
-  │    ^^^^^
+5 │      "sdk": null
+  │ ┌───────────^
+6 │ │   }
+  │ └──^
   ╵''',
     );
   });
@@ -304,12 +306,15 @@ line 5, column 11: Unsupported value for "git". Must be a String or a Map.
   });
 
   test('git - empty map', () {
-    _expectThrows({'git': {}}, r'''
-line 5, column 11: Required keys are missing: url.
+    _expectThrows(
+      {'git': {}},
+      r'''
+line 5, column 11: Missing key "url". type 'Null' is not a subtype of type 'String' in type cast
   ╷
 5 │    "git": {}
   │           ^^
-  ╵''');
+  ╵''',
+    );
   });
 
   test('git - null url', () {
@@ -318,10 +323,12 @@ line 5, column 11: Required keys are missing: url.
         'git': {'url': null}
       },
       r'''
-line 6, column 5: These keys had `null` values, which is not allowed: [url]
+line 6, column 12: Unsupported value for "url". type 'Null' is not a subtype of type 'String' in type cast
   ╷
-6 │     "url": null
-  │     ^^^^^
+6 │       "url": null
+  │ ┌────────────^
+7 │ │    }
+  │ └───^
   ╵''',
     );
   });
@@ -370,12 +377,10 @@ line 6, column 4: Unrecognized keys: [bob]; supported keys: [sdk, git, path, hos
     _expectThrows(
       {'path': null},
       r'''
-line 5, column 12: Unsupported value for "path". Must be a String.
+line 1, column 1: Missing key "name". type 'Null' is not a subtype of type 'String' in type cast
   ╷
-5 │      "path": null
-  │ ┌────────────^
-6 │ │   }
-  │ └──^
+1 │ {}
+  │ ^^
   ╵''',
     );
   });

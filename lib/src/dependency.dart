@@ -93,7 +93,6 @@ abstract class Dependency {
 
 @JsonSerializable()
 class SdkDependency extends Dependency {
-  @JsonKey(disallowNullValue: true, required: true)
   final String sdk;
   @JsonKey(fromJson: _constraintFromString)
   final VersionConstraint version;
@@ -108,7 +107,7 @@ class SdkDependency extends Dependency {
 
 @JsonSerializable()
 class GitDependency extends Dependency {
-  @JsonKey(fromJson: parseGitUri, required: true, disallowNullValue: true)
+  @JsonKey(fromJson: parseGitUri)
   final Uri url;
   final String? ref;
   final String? path;
@@ -201,7 +200,6 @@ class HostedDependency extends Dependency {
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class HostedDetails {
-  @JsonKey(required: true, disallowNullValue: true)
   final String name;
 
   @JsonKey(fromJson: parseGitUriOrNull, disallowNullValue: true)

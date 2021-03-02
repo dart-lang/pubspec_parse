@@ -224,7 +224,7 @@ line 1, column 1: Not a map
       expectParseThrows(
         {},
         r'''
-line 1, column 1: Required keys are missing: name.
+line 1, column 1: Missing key "name". type 'Null' is not a subtype of type 'String' in type cast
   ╷
 1 │ {}
   │ ^^
@@ -236,10 +236,10 @@ line 1, column 1: Required keys are missing: name.
       expectParseThrows(
         {'name': null},
         r'''
-line 2, column 2: These keys had `null` values, which is not allowed: [name]
+line 2, column 10: Unsupported value for "name". type 'Null' is not a subtype of type 'String' in type cast
   ╷
 2 │  "name": null
-  │  ^^^^^^
+  │          ^^^^
   ╵''',
       );
     });
