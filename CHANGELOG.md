@@ -1,4 +1,4 @@
-## 1.0.1-dev
+## 1.0.1
 
 - Export `HostedDetails` publicly.
 
