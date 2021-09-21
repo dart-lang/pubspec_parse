@@ -211,7 +211,7 @@ class HostedDependency extends Dependency {
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class HostedDetails {
-  final String name;
+  final String? name;
 
   @JsonKey(fromJson: parseGitUriOrNull, disallowNullValue: true)
   final Uri? url;
@@ -220,7 +220,7 @@ class HostedDetails {
 
   factory HostedDetails.fromJson(Object data) {
     if (data is String) {
-      data = {'name': data};
+      data = {'url': data};
     }
 
     if (data is Map) {
