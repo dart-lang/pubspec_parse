@@ -1,3 +1,8 @@
+## 2.0.0-dev
+
+- __Breaking__: `HostedDetails.name` is now nullable to reflect changes from
+  Dart 2.15. Use the name from the package instead.
+
 ## 1.1.1-dev
 
 - Require Dart SDK >= 2.14.0
