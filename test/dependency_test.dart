@@ -165,7 +165,7 @@ line 10, column 4: Unrecognized keys: [not_supported]; supported keys: [sdk, git
   test('map w/ version and hosted as String', () {
     final dep = _dependency<HostedDependency>(
       {'version': '^1.0.0', 'hosted': 'hosted_url'},
-      skipTryPub: true,
+      skipTryPub: true, // todo: Unskip once put supports this
     );
     expect(dep.version.toString(), '^1.0.0');
     expect(dep.hosted!.name, isNull);
