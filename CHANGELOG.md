@@ -1,7 +1,11 @@
-## 2.0.0-dev
+## 1.2.0-dev
 
-- __Breaking__: `HostedDetails.name` is now nullable to reflect changes from
-  Dart 2.15. Use the name from the package instead.
+- Update `HostedDetails` to reflect how `hosted` dependencies are parsed in
+  Dart 2.15:
+   - Add `HostedDetails.declaredName` as the (optional) `name` property in a 
+     `hosted` block.
+   - `HostedDetails.name` now falls back to the name of the dependency if no
+      name is declared in the block.
 
 ## 1.1.1-dev
 

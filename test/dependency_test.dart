@@ -121,12 +121,16 @@ line 4, column 10: Unsupported value for "dep". Could not parse version "not a v
   });
 
   test('map /w hosted as a map without name', () {
-    final dep = _dependency<HostedDependency>({
-      'version': '^1.0.0',
-      'hosted': {'url': 'https://hosted_url'}
-    }, skipTryPub: true); // todo: Unskip once pub supports this syntax
+    final dep = _dependency<HostedDependency>(
+      {
+        'version': '^1.0.0',
+        'hosted': {'url': 'https://hosted_url'}
+      },
+      skipTryPub: true, // todo: Unskip once pub supports this syntax
+    );
     expect(dep.version.toString(), '^1.0.0');
-    expect(dep.hosted!.name, isNull);
+    expect(dep.hosted!.declaredName, isNull);
+    expect(dep.hosted!.name, 'dep');
     expect(dep.hosted!.url.toString(), 'https://hosted_url');
     expect(dep.toString(), 'HostedDependency: ^1.0.0');
   });
@@ -168,7 +172,8 @@ line 10, column 4: Unrecognized keys: [not_supported]; supported keys: [sdk, git
       skipTryPub: true, // todo: Unskip once put supports this
     );
     expect(dep.version.toString(), '^1.0.0');
-    expect(dep.hosted!.name, isNull);
+    expect(dep.hosted!.declaredName, isNull);
+    expect(dep.hosted!.name, 'dep');
     expect(dep.hosted!.url, Uri.parse('hosted_url'));
     expect(dep.toString(), 'HostedDependency: ^1.0.0');
   });
@@ -176,7 +181,8 @@ line 10, column 4: Unrecognized keys: [not_supported]; supported keys: [sdk, git
   test('map w/ hosted as String', () {
     final dep = _dependency<HostedDependency>({'hosted': 'hosted_url'});
     expect(dep.version, VersionConstraint.any);
-    expect(dep.hosted!.name, isNull);
+    expect(dep.hosted!.declaredName, isNull);
+    expect(dep.hosted!.name, 'dep');
     expect(dep.hosted!.url, Uri.parse('hosted_url'));
     expect(dep.toString(), 'HostedDependency: any');
   });

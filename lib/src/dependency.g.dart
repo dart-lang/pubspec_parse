@@ -68,4 +68,5 @@ HostedDetails _$HostedDetailsFromJson(Map json) => $checkedCreate(
         );
         return val;
       },
+      fieldKeyMap: const {'declaredName': 'name'},
     );
