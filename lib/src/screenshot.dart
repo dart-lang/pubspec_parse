@@ -24,23 +24,39 @@ List<Screenshot> parseScreenshots(List? input) {
     final description = e['description'];
     if (description == null) {
       throw CheckedFromJsonException(
-          e, 'description', 'Screenshot', 'Missing required key `description`');
+        e,
+        'description',
+        'Screenshot',
+        'Missing required key `description`',
+      );
     }
 
     if (description is! String) {
       throw CheckedFromJsonException(
-          e, 'description', 'Screenshot', '`$description` is not a String');
+        e,
+        'description',
+        'Screenshot',
+        '`$description` is not a String',
+      );
     }
 
     final path = e['path'];
     if (path == null) {
       throw CheckedFromJsonException(
-          e, 'path', 'Screenshot', 'Missing required key `path`');
+        e,
+        'path',
+        'Screenshot',
+        'Missing required key `path`',
+      );
     }
 
     if (path is! String) {
       throw CheckedFromJsonException(
-          e, 'path', 'Screenshot', '`$path` is not a String');
+        e,
+        'path',
+        'Screenshot',
+        '`$path` is not a String',
+      );
     }
 
     res.add(Screenshot(description, path));
