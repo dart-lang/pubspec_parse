@@ -1,5 +1,8 @@
 ## 1.2.1-dev
 
+- Update SDK requirement to `2.17.0`.
+- Fix the unit tests for Dart 3.0.0.
+
 ## 1.2.1
 
 - Added support for `funding` field.
