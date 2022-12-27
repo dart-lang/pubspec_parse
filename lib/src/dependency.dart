@@ -9,6 +9,7 @@ import 'package:yaml/yaml.dart';
 
 part 'dependency.g.dart';
 
+/// String is the dependency name as it appears in the `pubspec.yaml` file
 Map<String, Dependency> parseDeps(Map? source) =>
     source?.map((k, v) {
       final key = k as String;
