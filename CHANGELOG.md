@@ -1,13 +1,11 @@
-## 1.3.0
-
-- Added support for `funding` field.
-- Update SDK requirement to `2.17.0`.
-- Fix the unit tests for Dart 3.0.0.
-
-## 1.2.1
+## 1.2.2-dev
 
 - Require Dart SDK >= 2.18.0
 - Required `json_annotation: ^4.8.0`
+
+## 1.2.1
+
+- Added support for `funding` field.
 
 ## 1.2.0
 
