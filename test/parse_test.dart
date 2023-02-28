@@ -422,7 +422,6 @@ line 6, column 13: Unsupported value for "funding". Illegal scheme character at 
         skipTryPub: true,
         lenient: true,
       );
-
       expect(value.name, 'sample');
       expect(value.topics, isNull);
     });
