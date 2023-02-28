@@ -412,6 +412,20 @@ line 6, column 13: Unsupported value for "funding". Illegal scheme character at 
         skipTryPub: true,
       );
     });
+
+    test('invalid data - lenient', () {
+      final value = parse(
+        {
+          ...defaultPubspec,
+          'topics': [1],
+        },
+        skipTryPub: true,
+        lenient: true,
+      );
+
+      expect(value.name, 'sample');
+      expect(value.topics, isNull);
+    });
   });
 
   group('screenshots', () {
