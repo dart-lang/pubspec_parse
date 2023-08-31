@@ -204,6 +204,18 @@ class HostedDependency extends Dependency {
 
   @override
   String get _info => version.toString();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is HostedDependency &&
+        other.version == version &&
+        other.hosted == hosted;
+  }
+
+  @override
+  int get hashCode => version.hashCode ^ hosted.hashCode;
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
