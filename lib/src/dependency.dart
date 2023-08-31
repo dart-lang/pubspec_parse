@@ -111,18 +111,6 @@ class SdkDependency extends Dependency {
 
   @override
   String get _info => sdk;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is SdkDependency &&
-        other.sdk == sdk &&
-        other.version == version;
-  }
-
-  @override
-  int get hashCode => sdk.hashCode ^ version.hashCode;
 }
 
 @JsonSerializable()
@@ -148,19 +136,6 @@ class GitDependency extends Dependency {
 
   @override
   String get _info => 'url@$url';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is GitDependency &&
-        other.url == url &&
-        other.ref == ref &&
-        other.path == path;
-  }
-
-  @override
-  int get hashCode => url.hashCode ^ ref.hashCode ^ path.hashCode;
 }
 
 Uri? parseGitUriOrNull(String? value) =>
@@ -213,16 +188,6 @@ class PathDependency extends Dependency {
 
   @override
   String get _info => 'path@$path';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is PathDependency && other.path == path;
-  }
-
-  @override
-  int get hashCode => path.hashCode;
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
@@ -239,18 +204,6 @@ class HostedDependency extends Dependency {
 
   @override
   String get _info => version.toString();
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is HostedDependency &&
-        other.version == version &&
-        other.hosted == hosted;
-  }
-
-  @override
-  int get hashCode => version.hashCode ^ hosted.hashCode;
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)

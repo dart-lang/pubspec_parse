@@ -14,7 +14,8 @@ dependency_overrides:
     expect(pubspecOverrides.dependencyOverrides.length, 1);
     final dependency = pubspecOverrides.dependencyOverrides.entries.first;
     expect(dependency.key, 'transmogrify');
-    expect(dependency.value, HostedDependency(version: Version(3, 2, 1)));
+    expect(dependency.value, isA<HostedDependency>());
+    expect((dependency.value as HostedDependency).version, Version(3, 2, 1));
   });
 
   test('Parsing pubspec_overrides.yaml in lenient mode', () {
