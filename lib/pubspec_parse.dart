@@ -11,4 +11,5 @@ export 'src/dependency.dart'
         PathDependency,
         SdkDependency;
 export 'src/pubspec.dart' show Pubspec;
+export 'src/pubspec_overrides.dart' show PubspecOverrides;
 export 'src/screenshot.dart' show Screenshot;

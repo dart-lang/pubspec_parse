@@ -1,6 +1,7 @@
-## 1.2.4-wip
+## 1.2.4
 
-- Require Dart 3.0
+- Require Dart `3.0`.
+- Add `pubspec_overrides` support.
 
 ## 1.2.3
 
