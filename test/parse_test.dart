@@ -52,7 +52,7 @@ void main() {
         'https://patreon.com/example',
       ],
       'topics': ['widget', 'button'],
-      'ignored_advisories': ['111'],
+      'ignored_advisories': ['111', '222'],
       'screenshots': [
         {'description': 'my screenshot', 'path': 'path/to/screenshot'},
       ],
