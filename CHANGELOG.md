@@ -1,4 +1,4 @@
-## 1.3.4-wip
+## 1.3.0
 
 - Require Dart 3.0
 - Added support for `ignored_advisories` field.
