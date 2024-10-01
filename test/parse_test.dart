@@ -153,13 +153,24 @@ void main() {
       p.join('test', 'fixtures', 'flutter_favorite_pubspecs.json'),
     ).readAsString();
 
-    final favoritesJson = jsonDecode(jsonString) as List<dynamic>;
-
-    for (var favoriteJson in favoritesJson) {
-      Pubspec.fromJson(favoriteJson as Map<String, dynamic>);
+    List<Map<String, dynamic>> favoritesJson;
+    try {
+      favoritesJson =
+          (jsonDecode(jsonString) as List).cast<Map<String, dynamic>>();
+    } catch (e) {
+      fail('Failed to parse JSON: $e');
     }
 
-    expect(favoritesJson.length, 73);
+    for (var favoriteJson in favoritesJson) {
+      try {
+        Pubspec.fromJson(favoriteJson);
+      } catch (e) {
+        final name = favoriteJson['name'];
+        fail('Failed to parse pubspec for package "$name" \n$e');
+      }
+    }
+
+    expect(favoritesJson.length, 73, reason: 'Unexpected number of pubspecs');
   });
 
   test('environment values can be null', () async {
