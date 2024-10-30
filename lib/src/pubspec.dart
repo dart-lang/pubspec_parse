@@ -74,7 +74,7 @@ class Pubspec {
   final String? documentation;
 
   @JsonKey(fromJson: _environmentMap)
-  final Map<String, VersionConstraint?>? environment;
+  final Map<String, VersionConstraint?> environment;
 
   @JsonKey(fromJson: parseDeps)
   final Map<String, Dependency> dependencies;
