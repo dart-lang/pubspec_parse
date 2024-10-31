@@ -1,7 +1,7 @@
 ## 1.2.4
 
 - Require Dart `3.0`.
-- Add `pubspec_overrides` support.
+- Add `pubspec_overrides` support via new `PubspecOverrides` class.
 
 ## 1.2.3
 
