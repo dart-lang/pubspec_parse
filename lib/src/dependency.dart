@@ -90,9 +90,7 @@ Dependency? _fromJson(Object? data, String name) {
   return null;
 }
 
-abstract class Dependency {
-  Dependency._();
-
+sealed class Dependency {
   String get _info;
 
   @override
@@ -106,8 +104,7 @@ class SdkDependency extends Dependency {
   final VersionConstraint version;
 
   SdkDependency(this.sdk, {VersionConstraint? version})
-      : version = version ?? VersionConstraint.any,
-        super._();
+      : version = version ?? VersionConstraint.any;
 
   @override
   String get _info => sdk;
@@ -127,7 +124,7 @@ class GitDependency extends Dependency {
   final String? ref;
   final String? path;
 
-  GitDependency(this.url, {this.ref, this.path}) : super._();
+  GitDependency(this.url, {this.ref, this.path});
 
   factory GitDependency.fromData(Object? data) {
     if (data is String) {
@@ -194,7 +191,7 @@ Uri? _tryParseScpUri(String value) {
 class PathDependency extends Dependency {
   final String path;
 
-  PathDependency(this.path) : super._();
+  PathDependency(this.path);
 
   factory PathDependency.fromData(Object? data) {
     if (data is String) {
@@ -223,8 +220,7 @@ class HostedDependency extends Dependency {
   final HostedDetails? hosted;
 
   HostedDependency({VersionConstraint? version, this.hosted})
-      : version = version ?? VersionConstraint.any,
-        super._();
+      : version = version ?? VersionConstraint.any;
 
   @override
   String get _info => version.toString();
