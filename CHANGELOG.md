@@ -2,6 +2,7 @@
 
 - Require Dart 3.2
 - Seal the `Dependency` class.
+- Remove deprecated package_api_docs rule
 
 ## 1.3.0
 
