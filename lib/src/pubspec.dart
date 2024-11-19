@@ -186,7 +186,7 @@ class Pubspec {
 Version? _versionFromString(String? input) =>
     input == null ? null : Version.parse(input);
 
-Map<String, VersionConstraint?>? _environmentMap(Map? source) =>
+Map<String, VersionConstraint?> _environmentMap(Map? source) =>
     source?.map((k, value) {
       final key = k as String;
       if (key == 'dart') {
@@ -222,4 +222,5 @@ Map<String, VersionConstraint?>? _environmentMap(Map? source) =>
       }
 
       return MapEntry(key, constraint);
-    });
+    }) ??
+    {};
