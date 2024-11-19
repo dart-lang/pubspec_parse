@@ -90,12 +90,7 @@ Dependency? _fromJson(Object? data, String name) {
   return null;
 }
 
-sealed class Dependency {
-  String get _info;
-
-  @override
-  String toString() => '$runtimeType: $_info';
-}
+sealed class Dependency {}
 
 @JsonSerializable()
 class SdkDependency extends Dependency {
@@ -107,14 +102,14 @@ class SdkDependency extends Dependency {
       : version = version ?? VersionConstraint.any;
 
   @override
-  String get _info => sdk;
-
-  @override
   bool operator ==(Object other) =>
       other is SdkDependency && other.sdk == sdk && other.version == version;
 
   @override
   int get hashCode => Object.hash(sdk, version);
+
+  @override
+  String toString() => 'SdkDependency($sdk)';
 }
 
 @JsonSerializable()
@@ -139,9 +134,6 @@ class GitDependency extends Dependency {
   }
 
   @override
-  String get _info => 'url@$url';
-
-  @override
   bool operator ==(Object other) =>
       other is GitDependency &&
       other.url == url &&
@@ -150,6 +142,9 @@ class GitDependency extends Dependency {
 
   @override
   int get hashCode => Object.hash(url, ref, path);
+
+  @override
+  String toString() => 'GitDependency($url, ref: $ref, path: $path)';
 }
 
 Uri? parseGitUriOrNull(String? value) =>
@@ -201,14 +196,14 @@ class PathDependency extends Dependency {
   }
 
   @override
-  String get _info => 'path@$path';
-
-  @override
   bool operator ==(Object other) =>
       other is PathDependency && other.path == path;
 
   @override
   int get hashCode => path.hashCode;
+
+  @override
+  String toString() => 'PathDependency($path)';
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
@@ -223,9 +218,6 @@ class HostedDependency extends Dependency {
       : version = version ?? VersionConstraint.any;
 
   @override
-  String get _info => version.toString();
-
-  @override
   bool operator ==(Object other) =>
       other is HostedDependency &&
       other.version == version &&
@@ -233,6 +225,9 @@ class HostedDependency extends Dependency {
 
   @override
   int get hashCode => Object.hash(version, hosted);
+
+  @override
+  String toString() => 'HostedDependency(version: $version, hosted: $hosted)';
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
