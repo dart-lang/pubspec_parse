@@ -1,6 +1,7 @@
 ## 1.3.1-wip
 
 - Require Dart 3.2
+- Set `Pubspec.environment` to non-nullable.
 
 ## 1.3.0
 
