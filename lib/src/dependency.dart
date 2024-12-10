@@ -109,7 +109,7 @@ class SdkDependency extends Dependency {
   int get hashCode => Object.hash(sdk, version);
 
   @override
-  String toString() => 'SdkDependency($sdk)';
+  String toString() => 'SdkDependency: $sdk';
 }
 
 @JsonSerializable()
@@ -144,7 +144,7 @@ class GitDependency extends Dependency {
   int get hashCode => Object.hash(url, ref, path);
 
   @override
-  String toString() => 'GitDependency($url, ref: $ref, path: $path)';
+  String toString() => 'GitDependency: url@$url';
 }
 
 Uri? parseGitUriOrNull(String? value) =>
@@ -203,7 +203,7 @@ class PathDependency extends Dependency {
   int get hashCode => path.hashCode;
 
   @override
-  String toString() => 'PathDependency($path)';
+  String toString() => 'PathDependency: path@$path';
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
@@ -227,7 +227,7 @@ class HostedDependency extends Dependency {
   int get hashCode => Object.hash(version, hosted);
 
   @override
-  String toString() => 'HostedDependency(version: $version, hosted: $hosted)';
+  String toString() => 'HostedDependency: $version';
 }
 
 @JsonSerializable(disallowUnrecognizedKeys: true)
