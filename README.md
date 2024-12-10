@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This repo has moved to https://github.com/dart-lang/tools/tree/main/pkgs/pubspec_parse
+
 [![Dart CI](https://github.com/dart-lang/pubspec_parse/actions/workflows/test-package.yml/badge.svg)](https://github.com/dart-lang/pubspec_parse/actions/workflows/test-package.yml)
 [![pub package](https://img.shields.io/pub/v/pubspec_parse.svg)](https://pub.dev/packages/pubspec_parse)
 [![package publisher](https://img.shields.io/pub/publisher/pubspec_parse.svg)](https://pub.dev/packages/pubspec_parse/publisher)
