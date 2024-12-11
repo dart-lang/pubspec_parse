@@ -1,4 +1,4 @@
-## 1.3.1-wip
+## 1.4.0-wip
 
 - Require Dart 3.2
 - Seal the `Dependency` class.
