@@ -54,6 +54,13 @@ class Pubspec {
   @JsonKey(fromJson: parseScreenshots)
   final List<Screenshot>? screenshots;
 
+  /// A list of gitignore patterns specifying files to ignore when searching
+  /// for potential secret leaks before publishing.
+  ///
+  /// More information: https://dart.dev/tools/pub/pubspec#false_secrets
+  @JsonKey(name: 'false_secrets')
+  final List<String>? falseSecrets;
+
   /// If there is exactly 1 value in [authors], returns it.
   ///
   /// If there are 0 or more than 1, returns `null`.
@@ -117,6 +124,7 @@ class Pubspec {
     this.screenshots,
     this.documentation,
     this.description,
+    this.falseSecrets,
     Map<String, Dependency>? dependencies,
     Map<String, Dependency>? devDependencies,
     Map<String, Dependency>? dependencyOverrides,
